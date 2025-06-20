@@ -1,10 +1,19 @@
 import { useSelector } from 'react-redux'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './Homepage.css'
 import ProductList from './ProductList';
 
 function HomePage() {
     const [showAllProducts, setShowAllProducts] = useState(false);
+    const [filters, setFilters] = useState({});
+    const [size, setSize] = useState(null);
+
+    // Check if filters.size exists and set size value
+    useEffect(() => {
+        if (filters.size) {
+            setSize(filters.size);
+        }
+    }, [filters]);
     
     function sortProductsByName(productA, productB) {
         let nameA = productA.name.toUpperCase(); 
