@@ -2,11 +2,14 @@ import { useSelector } from 'react-redux'
 import { useState, useEffect } from 'react'
 import './Homepage.css'
 import ProductList from './ProductList';
+import { Modal } from '../../context/Modal';
+import SignUpForm from '../auth/SignUpForm';
 
 function HomePage() {
     const [showAllProducts, setShowAllProducts] = useState(false);
     const [filters, setFilters] = useState({});
     const [size, setSize] = useState(null);
+    const [showSignUpModal, setShowSignUpModal] = useState(false);
 
     // Check if filters.size exists and set size value
     useEffect(() => {
@@ -68,7 +71,10 @@ function HomePage() {
                                     Shop Fresh Produce
                                 </button>
                                 {!user && (
-                                    <button className="btn btn-secondary btn-lg">
+                                    <button 
+                                        className="btn btn-secondary btn-lg"
+                                        onClick={() => setShowSignUpModal(true)}
+                                    >
                                         <i className="fas fa-user-plus"></i>
                                         Join Our Community
                                     </button>
@@ -226,8 +232,9 @@ function HomePage() {
                                     Create Your First Listing
                                 </a>
                             ) : (
-                                <button className="btn btn-primary btn-xl">
+                                <button className="btn btn-primary btn-xl" onClick={() => setShowSignUpModal(true)}>
                                     <i className="fas fa-store"></i>
+                                    
                                     Start Selling Today
                                 </button>
                             )}
@@ -235,6 +242,13 @@ function HomePage() {
                     </div>
                 </div>
             </section>
+
+            {/* Sign Up Modal */}
+            {showSignUpModal && (
+                <Modal onClose={() => setShowSignUpModal(false)}>
+                    <SignUpForm onClose={() => setShowSignUpModal(false)} />
+                </Modal>
+            )}
         </div>
     )
 }
