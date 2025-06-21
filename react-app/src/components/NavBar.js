@@ -1,6 +1,6 @@
 import React from 'react';
-import { useState } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, NavLink, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import LogoutButton from './auth/LogoutButton';
 import './NavBar.css'
@@ -19,6 +19,8 @@ const NavBar = () => {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showSignUpModal, setShowSignUpModal] = useState(false);
   const [showUserDropdown, setShowUserDropdown] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const history = useHistory();
 
   // Calculate total items in cart
   const cartItemCount = Object.values(cartItems).reduce((total, item) => total + (item.quantity || 0), 0);
@@ -26,6 +28,23 @@ const NavBar = () => {
   const handleDemoLogin = async () => {
     await dispatch(login('demo@aa.io', 'password'));
   };
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      // Navigate to products page with search query
+      history.push(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
+
+  const handleSearchInputChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  // Close dropdown when user state changes (login/logout)
+  useEffect(() => {
+    setShowUserDropdown(false);
+  }, [user]);
 
   return (
     <>
@@ -48,27 +67,31 @@ const NavBar = () => {
             </Link>
           </div>
 
-          {/* Center Section - Search (Future Feature) */}
+          {/* Center Section - Search */}
           <div className="navbar-center">
-            <div className="navbar-search">
+            <form className="navbar-search" onSubmit={handleSearch}>
               <i className="fas fa-search navbar-search-icon"></i>
               <input 
                 type="text" 
                 placeholder="Search fresh produce..." 
                 className="navbar-search-input"
+                value={searchQuery}
+                onChange={handleSearchInputChange}
               />
-            </div>
+            </form>
           </div>
 
           {/* Right Section - User Actions */}
           <div className="navbar-right">
             {user ? (
-              <>
-                <Link to="/products/create" className="btn btn-outline btn-sm">
+              <div className="navbar-user-actions">
+                {/* Primary Action - Sell Produce */}
+                <Link to="/products/create" className="navbar-sell-btn">
                   <i className="fas fa-plus"></i>
-                  Sell Produce
+                  <span>Sell Produce</span>
                 </Link>
                 
+                {/* Cart Button */}
                 <button 
                   className="navbar-cart-btn"
                   onClick={() => setCart(!cart)}
@@ -80,7 +103,7 @@ const NavBar = () => {
                   )}
                 </button>
 
-                {/* User Menu with Dropdown */}
+                {/* User Profile Menu */}
                 <div className="navbar-user-menu-container">
                   <button 
                     className="navbar-user-menu"
@@ -125,19 +148,19 @@ const NavBar = () => {
                         <Link 
                           to="/products/create" 
                           className="navbar-user-dropdown-item"
-                          onClick={() => setShowUserDropdown(false)}
+                          // onClick={() => setShowUserDropdown(false)}
                         >
                           <i className="fas fa-plus"></i>
                           Create Listing
                         </Link>
-                        <div className="navbar-user-dropdown-item navbar-user-dropdown-item-disabled">
+                        {/* <div className="navbar-user-dropdown-item navbar-user-dropdown-item-disabled">
                           <i className="fas fa-heart"></i>
                           Favorites (Soon)
                         </div>
                         <div className="navbar-user-dropdown-item navbar-user-dropdown-item-disabled">
                           <i className="fas fa-history"></i>
                           Order History (Soon)
-                        </div>
+                        </div> */}
                       </div>
                       
                       <div className="navbar-user-dropdown-divider"></div>
@@ -153,41 +176,33 @@ const NavBar = () => {
                     </div>
                   )}
                 </div>
-
-                {/* Direct Logout Button for Quick Access */}
-                <button 
-                  className="btn btn-ghost btn-sm navbar-logout-btn"
-                  onClick={() => {
-                    setCart(false);
-                    dispatch(logout());
-                  }}
-                  title="Log out"
-                >
-                  <i className="fas fa-sign-out-alt"></i>
-                  <span className="navbar-logout-text">Logout</span>
-                </button>
-              </>
+              </div>
             ) : (
-              <div className="navbar-auth-buttons">
+              <div className="navbar-auth-actions">
+                {/* Demo Login Button */}
                 <button 
-                  className="btn btn-ghost btn-sm"
-                  onClick={() => setShowLoginModal(true)}
-                >
-                  Log In
-                </button>
-                <button 
-                  className="btn btn-demo btn-sm"
+                  className="navbar-demo-btn"
                   onClick={handleDemoLogin}
                   title="Try the app with a demo account"
                 >
                   <i className="fas fa-play"></i>
-                  Demo
+                  <span>Try Demo</span>
                 </button>
+
+                {/* Login Button */}
                 <button 
-                  className="btn btn-primary btn-sm"
+                  className="navbar-login-btn"
+                  onClick={() => setShowLoginModal(true)}
+                >
+                  <span>Log In</span>
+                </button>
+
+                {/* Sign Up Button */}
+                <button 
+                  className="navbar-signup-btn"
                   onClick={() => setShowSignUpModal(true)}
                 >
-                  Sign Up
+                  <span>Sign Up</span>
                 </button>
               </div>
             )}
@@ -200,6 +215,7 @@ const NavBar = () => {
         <div 
           className="navbar-dropdown-overlay"
           onClick={() => setShowUserDropdown(false)}
+          style={{ zIndex: 1 }}
         />
       )}
 
