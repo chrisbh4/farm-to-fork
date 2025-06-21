@@ -41,17 +41,6 @@ const NavBar = () => {
             >
               <i className="fas fa-bars" />
             </button>
-            
-            <NavLink to='/' exact={true} className="navbar-logo-link">
-              <div className="navbar-logo">
-                <img 
-                  className="navbar-logo-img" 
-                  src={require("../assets/logos/batteriesinc-logo.svg").default}
-                  alt="BatteriesInc Logo"
-                />
-                <span className="navbar-brand-text">BatteriesInc</span>
-              </div>
-            </NavLink>
           </div>
 
           {/* Center Section - Search (Future Feature) */}
@@ -62,7 +51,6 @@ const NavBar = () => {
                 type="text" 
                 placeholder="Search fresh produce..." 
                 className="navbar-search-input"
-                disabled
               />
             </div>
           </div>

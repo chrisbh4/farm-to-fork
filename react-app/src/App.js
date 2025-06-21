@@ -13,6 +13,7 @@ import ProductEditForm from './components/Products/ProductEditForm';
 import { authenticate } from './store/session';
 import ProductCreateForm from './components/Products/ProductCreateForm';
 import { fetchAllProducts } from './store/products';
+import ProductsPage from './components/Products/ProductsPage';
 
 function App() {
   const [loaded, setLoaded] = useState(false);
@@ -45,6 +46,9 @@ function App() {
         </ProtectedRoute>
         <ProtectedRoute path='/users/:userId' exact={true} >
           <User />
+        </ProtectedRoute>
+        <ProtectedRoute path='/products' exact={true} >
+          <ProductsPage />
         </ProtectedRoute>
         <ProtectedRoute path='/products/create' exact={true}>
           <ProductCreateForm />
