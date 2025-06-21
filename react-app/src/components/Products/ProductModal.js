@@ -3,20 +3,35 @@ import { Link } from 'react-router-dom';
 import './Product.css'
 import { useSelector } from 'react-redux'
 import { useAddItem } from '../../store/shoppingCart'
+import { Modal } from '../../context/Modal'
+import SignUpForm from '../auth/SignUpForm'
+import LoginForm from '../auth/LoginForm'
 
-const ProductModal = ({ product, userId, setEditMode }) => {
+const ProductModal = ({ product, userId, setEditMode, setShowProductModal }) => {
   const cart = useSelector(state => state.shoppingCart);
   const addItem = useAddItem(product, cart);
   const [imageError, setImageError] = useState(false);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const [quantity, setQuantity] = useState(1);
+  const [showSignUpModal, setShowSignUpModal] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+
+  const handleQuantityChange = (newQuantity) => {
+    if (newQuantity >= 1 && newQuantity <= 100) {
+      setQuantity(newQuantity);
+    }
+  };
 
   const handleAddToCart = async () => {
     setIsAddingToCart(true);
-    await addItem();
+    await addItem(quantity);
     
-    // Show success feedback briefly
+    // Show success feedback briefly, then close modal
     setTimeout(() => {
       setIsAddingToCart(false);
+      if (setShowProductModal) {
+        setShowProductModal(false);
+      }
     }, 800);
   };
 
@@ -112,7 +127,7 @@ const ProductModal = ({ product, userId, setEditMode }) => {
                 <i className="fas fa-user-circle"></i>
               </div>
               <div className="farmer-details">
-                <h4 className="farmer-name">Local Farmer</h4>
+                <h4 className="farmer-name">{product.username ? product.username.charAt(0).toUpperCase() + product.username.slice(1) : 'Local Farmer'}</h4>
                 <p className="farmer-location">
                   <i className="fas fa-map-marker-alt"></i>
                   Farm-to-table freshness
@@ -137,11 +152,11 @@ const ProductModal = ({ product, userId, setEditMode }) => {
               <div className="quantity-selector">
                 <label className="quantity-label">Quantity (lbs):</label>
                 <div className="quantity-controls">
-                  <button className="quantity-btn" disabled>
+                  <button className="quantity-btn" onClick={() => handleQuantityChange(quantity - 1)}>
                     <i className="fas fa-minus"></i>
                   </button>
-                  <span className="quantity-display">1</span>
-                  <button className="quantity-btn" disabled>
+                  <span className="quantity-display">{quantity}</span>
+                  <button className="quantity-btn" onClick={() => handleQuantityChange(quantity + 1)}>
                     <i className="fas fa-plus"></i>
                   </button>
                 </div>
@@ -160,7 +175,7 @@ const ProductModal = ({ product, userId, setEditMode }) => {
                 ) : (
                   <>
                     <i className="fas fa-shopping-cart"></i>
-                    Add to Cart - ${product.price.toFixed(2)}
+                    Add to Cart - ${(product.price * quantity).toFixed(2)}
                   </>
                 )}
               </button>
@@ -193,11 +208,11 @@ const ProductModal = ({ product, userId, setEditMode }) => {
                   Sign up or log in to add fresh produce to your cart and support local farmers.
                 </p>
                 <div className="guest-cta-buttons">
-                  <button className="btn btn-primary btn-lg">
+                  <button className="btn btn-primary btn-lg" onClick={() => setShowSignUpModal(true)}>
                     <i className="fas fa-user-plus"></i>
                     Sign Up Free
                   </button>
-                  <button className="btn btn-secondary btn-lg">
+                  <button className="btn btn-secondary btn-lg" onClick={() => setShowLoginModal(true)}>
                     <i className="fas fa-sign-in-alt"></i>
                     Log In
                   </button>
@@ -207,6 +222,30 @@ const ProductModal = ({ product, userId, setEditMode }) => {
           )}
         </div>
       </div>
+
+      {/* Sign Up Modal */}
+      {showSignUpModal && (
+        <Modal onClose={() => setShowSignUpModal(false)}>
+          <SignUpForm onClose={() => {
+            setShowSignUpModal(false);
+            if (setShowProductModal) {
+              setShowProductModal(false);
+            }
+          }} />
+        </Modal>
+      )}
+
+      {/* Login Modal */}
+      {showLoginModal && (
+        <Modal onClose={() => setShowLoginModal(false)}>
+          <LoginForm onClose={() => {
+            setShowLoginModal(false);
+            if (setShowProductModal) {
+              setShowProductModal(false);
+            }
+          }} />
+        </Modal>
+      )}
     </div>
   );
 };

@@ -11,12 +11,19 @@ const ProductCreateForm = () => {
   const [price, setPrice] = useState('');
   const [quantity] = useState(1);
   const [image, setImage] = useState('');
+  const [productType, setProductType] = useState('Vegetables');
   const [isLoading, setIsLoading] = useState(false);
 
   const user = useSelector(state => state.session.user);
   const user_id = user.id;
   const history = useHistory();
   const dispatch = useDispatch();
+
+  const PRODUCT_TYPES = [
+    { value: 'Vegetables', label: 'Vegetables' },
+    { value: 'Fruits', label: 'Fruits' },
+    { value: 'Herbs', label: 'Herbs' }
+  ];
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -35,6 +42,8 @@ const ProductCreateForm = () => {
     if (!price || price <= 0) newErrors.price = 'Price must be greater than 0';
     if (price > 10000) newErrors.price = 'Price must be less than $10,000';
 
+    if (!productType) newErrors.productType = 'Product type is required';
+
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       setIsLoading(false);
@@ -42,7 +51,7 @@ const ProductCreateForm = () => {
     }
 
     try {
-      const data = await dispatch(fetchCreateProduct(user_id, name, description, parseFloat(price), quantity, image));
+      const data = await dispatch(fetchCreateProduct(user_id, name, description, parseFloat(price), quantity, image, productType));
 
       if (data) {
         if (!data.errors) {
@@ -175,6 +184,32 @@ const ProductCreateForm = () => {
             <p className="form-help-text">
               Set a competitive price for your fresh produce
             </p>
+          </div>
+
+          {/* Product Type */}
+          <div className="form-group">
+            <label htmlFor="productType" className="form-label">
+              Product Type <span className="required">*</span>
+            </label>
+            <select
+              id="productType"
+              className={`form-select ${errors.productType ? 'form-input-error' : ''}`}
+              value={productType}
+              onChange={(e) => setProductType(e.target.value)}
+              disabled={isLoading}
+            >
+              {PRODUCT_TYPES.map((type) => (
+                <option key={type.value} value={type.value}>
+                  {type.label}
+                </option>
+              ))}
+            </select>
+            {errors.productType && (
+              <p className="form-error">
+                <i className="fas fa-exclamation-circle"></i>
+                {errors.productType}
+              </p>
+            )}
           </div>
 
           {/* Image URL */}

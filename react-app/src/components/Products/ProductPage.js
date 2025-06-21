@@ -17,7 +17,7 @@ const ProductPage = ({ product, setShowProductModal }) => {
     let content = null
 
     if (!editMode) {
-        content = <ProductModal userId={userId}  product={product} editMode={editMode} setEditMode={setEditMode} />
+        content = <ProductModal userId={userId} product={product} editMode={editMode} setEditMode={setEditMode} setShowProductModal={setShowProductModal} />
     }
     else {
         content = <ProductEditForm product={product} editMode={editMode} setEditMode={setEditMode} />

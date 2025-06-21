@@ -1,4 +1,3 @@
-
 const ALL_PRODUCTS = 'products/ALL_PRODUCTS';
 const CREATE_PRODUCT = 'products/CREATE_PRODUCT';
 const EDIT_PRODUCT = 'products/EDIT_PRODUCT';
@@ -37,7 +36,7 @@ export const fetchAllProducts = () => async (dispatch) => {
     }
 }
 
-export const fetchCreateProduct = (user_id, name, description, price, quantity, image) => async (dispatch) => {
+export const fetchCreateProduct = (user_id, name, description, price, quantity, image, product_type) => async (dispatch) => {
 
     const response = await fetch('/api/products/create', {
         method: "POST",
@@ -48,7 +47,8 @@ export const fetchCreateProduct = (user_id, name, description, price, quantity, 
             description,
             price,
             quantity,
-            image
+            image,
+            product_type
         })
     })
 
@@ -62,7 +62,7 @@ export const fetchCreateProduct = (user_id, name, description, price, quantity, 
     }
 }
 
-export const fetchEditProduct = (id, name, description, price, quantity, image) => async (dispatch) => {
+export const fetchEditProduct = (id, name, description, price, quantity, image, product_type) => async (dispatch) => {
     const response = await fetch(`/api/products/${id}`, {
         method: "PUT",
         headers: { 'Content-Type': "application/json" },
@@ -72,7 +72,8 @@ export const fetchEditProduct = (id, name, description, price, quantity, image) 
             description,
             price,
             quantity,
-            image
+            image,
+            product_type
         })
     })
     const data = await response.json()

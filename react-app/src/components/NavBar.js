@@ -41,6 +41,11 @@ const NavBar = () => {
             >
               <i className="fas fa-bars" />
             </button>
+            
+            <Link to="/" className="navbar-home-btn" aria-label="Go to home">
+              <i className="fas fa-home"></i>
+              <span className="navbar-home-text">Home</span>
+            </Link>
           </div>
 
           {/* Center Section - Search (Future Feature) */}

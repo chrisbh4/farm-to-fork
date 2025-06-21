@@ -49,6 +49,42 @@
   background-color: var(--gray-100);
 }
 
+.navbar-home-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  color: var(--gray-600);
+  background-color: transparent;
+  border: none;
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.navbar-home-btn:hover {
+  color: var(--primary-600);
+  background-color: var(--gray-100);
+  text-decoration: none;
+}
+
+.navbar-home-btn i {
+  font-size: var(--text-base);
+}
+
+.navbar-home-text {
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .navbar-home-text {
+    display: inline;
+  }
+}
+
 .navbar-logo-link {
   text-decoration: none;
   color: inherit;

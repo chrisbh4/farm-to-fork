@@ -12,10 +12,12 @@ class Product(db.Model):
     price = db.Column(db.Numeric(precision=10, scale=2, asdecimal=False), nullable=False )
     quantity = db.Column(db.Integer , nullable=True, default=1)
     image = db.Column(db.Text, nullable=True)
+    product_type = db.Column(db.String(50), nullable=False, default='Vegetables')
     created_at = db.Column(db.Date , nullable=False)
     updated_at = db.Column(db.Date , nullable=False)
 
     reviews = db.relationship("Review", backref=db.backref("products"), lazy=True )
+    user = db.relationship("User", backref=db.backref("products"), lazy=True )
 
 
 # Getters & Setters
@@ -72,11 +74,13 @@ class Product(db.Model):
         return {
             'id': self.id,
             'user_id': self.user_id,
+            'username': self.user.username if self.user else None,
             'name': self.name,
             'description': self.description,
             'price': self.price,
             'quantity': self.quantity,
             'image': self.image,
+            'product_type': self.product_type,
             'created_at': str(self.created_at),
             'updated_at': str(self.updated_at)
         }

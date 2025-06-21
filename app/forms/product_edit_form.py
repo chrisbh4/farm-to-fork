@@ -1,6 +1,5 @@
-
 from flask_wtf import FlaskForm
-from wtforms import StringField, DecimalField, TextAreaField, IntegerField, TextField
+from wtforms import StringField, DecimalField, TextAreaField, IntegerField, TextField, SelectField
 from wtforms.validators import DataRequired, Length, NumberRange, ValidationError
 from app.models import Product
 
@@ -13,7 +12,11 @@ def check_name_on_edit(form, field):
     if product and product.id != form.data['product_id']:
         raise ValidationError("Name must be unique.")
 
-
+PRODUCT_TYPES = [
+    ('Vegetables', 'Vegetables'),
+    ('Fruits', 'Fruits'),
+    ('Herbs', 'Herbs')
+]
 
 class ProductEditForm(FlaskForm):
     product_id = IntegerField("product_id")
@@ -22,3 +25,4 @@ class ProductEditForm(FlaskForm):
     price = DecimalField('Price', validators=[DataRequired(), NumberRange(min=0.01 ,max=99999999.99, message="Price must be between $%(min)d and $%(max)d.")])
     quantity = IntegerField('Quantity',validators=[DataRequired(), NumberRange(min=1, message="Quantity must be at least %(min)d.")])
     image = TextField("Image")
+    product_type = SelectField('Product Type', choices=PRODUCT_TYPES, validators=[DataRequired()])

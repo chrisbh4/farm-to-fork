@@ -9,6 +9,10 @@ function ProductList({product, user}) {
     const cart = useSelector(state => state.shoppingCart)
     const addItem = useAddItem(product, cart)
 
+    const handleAddToCart = () => {
+        addItem(1); // Call the function with quantity 1
+    };
+
     return (
         <div className='product-container' key={product.id}>
             <div className="product-card card">
@@ -25,7 +29,7 @@ function ProductList({product, user}) {
                     {user && (
                         <button 
                             className='product-quick-add'
-                            onClick={addItem}
+                            onClick={handleAddToCart}
                             title="Add to cart"
                         >
                             <i className="fas fa-plus"></i>
@@ -33,10 +37,10 @@ function ProductList({product, user}) {
                     )}
 
                     {/* Product Badge */}
-                    <div className="product-badge">
+                    {/* <div className="product-badge">
                         <i className="fas fa-leaf"></i>
                         <span>Fresh</span>
-                    </div>
+                    </div> */}
                 </div>
 
                 {/* Product Info */}
@@ -77,7 +81,7 @@ function ProductList({product, user}) {
                         {user && (
                             <button 
                                 className="btn btn-primary btn-sm product-add-btn"
-                                onClick={addItem}
+                                onClick={handleAddToCart}
                             >
                                 <i className="fas fa-shopping-cart"></i>
                                 Add to Cart
@@ -93,12 +97,12 @@ function ProductList({product, user}) {
                     </div>
                     <div className="farmer-details">
                         <span className="farmer-label">Grown by</span>
-                        <span className="farmer-name">Local Farmer</span>
+                        <span className="farmer-name">{product.username ? product.username.charAt(0).toUpperCase() + product.username.slice(1) : 'Local Farmer'}</span>
                     </div>
-                    <div className="farmer-rating">
+                    {/* <div className="farmer-rating">
                         <i className="fas fa-star"></i>
                         <span>4.9</span>
-                    </div>
+                    </div> */}
                 </div>
             </div>
 
