@@ -252,26 +252,14 @@ const NavBar = () => {
                   <Link 
                     to="/products/create" 
                     className="sidebar-menu-item"
-                    onClick={() => setOptionsOn(false)}
+                    onClick={() => {
+                      setOptionsOn(false);
+                    }}
                   >
                     <i className="fas fa-plus"></i>
                     Create New Listing
                   </Link>
                   
-                  <Link 
-                    to="/users" 
-                    className="sidebar-menu-item"
-                    onClick={() => setOptionsOn(false)}
-                  >
-                    <i className="fas fa-users"></i>
-                    Browse Farmers
-                  </Link>
-
-                  <div className="sidebar-menu-item">
-                    <i className="fas fa-heart"></i>
-                    Favorites (Coming Soon)
-                  </div>
-
                   <div className="sidebar-menu-item">
                     <i className="fas fa-history"></i>
                     Order History (Coming Soon)
