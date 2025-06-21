@@ -1,5 +1,6 @@
 import { useSelector } from 'react-redux'
 import { useState, useEffect } from 'react'
+import { useHistory } from 'react-router-dom';
 import './Homepage.css'
 import ProductList from './ProductList';
 import { Modal } from '../../context/Modal';
@@ -10,6 +11,7 @@ function HomePage() {
     const [filters, setFilters] = useState({});
     const [size, setSize] = useState(null);
     const [showSignUpModal, setShowSignUpModal] = useState(false);
+    const history = useHistory()
 
     // Check if filters.size exists and set size value
     useEffect(() => {
@@ -66,7 +68,9 @@ function HomePage() {
                                 agriculture while enjoying premium quality fruits and vegetables.
                             </p>
                             <div className="hero-actions">
-                                <button className="btn btn-primary btn-lg">
+                                <button className="btn btn-primary btn-lg" 
+                                        onClick={() => history.push('/products')}
+                                >
                                     <i className="fas fa-leaf"></i>
                                     Shop Fresh Produce
                                 </button>
