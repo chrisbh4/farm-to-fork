@@ -22,8 +22,7 @@ const ProductCreateForm = () => {
   const PRODUCT_TYPES = [
     { value: 'Vegetables', label: 'Vegetables' },
     { value: 'Fruits', label: 'Fruits' },
-    { value: 'Herbs', label: 'Herbs' },
-    { value: 'Organic', label: 'Organic' }
+    { value: 'Herbs', label: 'Herbs' }
   ];
 
   const onSubmit = async (e) => {

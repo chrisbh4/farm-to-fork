@@ -28,8 +28,7 @@ const ProductEditForm = () => {
   const PRODUCT_TYPES = [
     { value: 'Vegetables', label: 'Vegetables' },
     { value: 'Fruits', label: 'Fruits' },
-    { value: 'Herbs', label: 'Herbs' },
-    { value: 'Organic', label: 'Organic' }
+    { value: 'Herbs', label: 'Herbs' }
   ];
 
   // Redirect if product not found
@@ -68,7 +67,7 @@ const ProductEditForm = () => {
       
       if (data) {
         if (!data.errors) {
-          history.push(`/products/${product.id}`);
+          history.push('/products');
         } else {
           setErrors(data.errors);
         }

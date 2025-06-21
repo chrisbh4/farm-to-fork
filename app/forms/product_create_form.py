@@ -13,8 +13,7 @@ def check_name_on_create(form, field):
 PRODUCT_TYPES = [
     ('Vegetables', 'Vegetables'),
     ('Fruits', 'Fruits'),
-    ('Herbs', 'Herbs'),
-    ('Organic', 'Organic')
+    ('Herbs', 'Herbs')
 ]
 
 class ProductCreateForm(FlaskForm):

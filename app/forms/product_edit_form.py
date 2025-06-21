@@ -15,8 +15,7 @@ def check_name_on_edit(form, field):
 PRODUCT_TYPES = [
     ('Vegetables', 'Vegetables'),
     ('Fruits', 'Fruits'),
-    ('Herbs', 'Herbs'),
-    ('Organic', 'Organic')
+    ('Herbs', 'Herbs')
 ]
 
 class ProductEditForm(FlaskForm):

@@ -29,58 +29,15 @@ function AllProductsPage() {
     const products = Object.values(useSelector((state) => state.products)).sort(sortProductsByName);
     const user = useSelector(state => state.session.user);
 
+    // Get unique product types from the products data
+    const productTypes = ['All Products', ...new Set(products.map(product => product.product_type))];
+
     // Filter products based on active filter
     const getFilteredProducts = () => {
-        switch (activeFilter) {
-            case 'Vegetables':
-                return products.filter(product => 
-                    product.name.toLowerCase().includes('tomato') ||
-                    product.name.toLowerCase().includes('carrot') ||
-                    product.name.toLowerCase().includes('lettuce') ||
-                    product.name.toLowerCase().includes('cucumber') ||
-                    product.name.toLowerCase().includes('pepper') ||
-                    product.name.toLowerCase().includes('onion') ||
-                    product.name.toLowerCase().includes('potato') ||
-                    product.name.toLowerCase().includes('broccoli') ||
-                    product.name.toLowerCase().includes('cauliflower') ||
-                    product.name.toLowerCase().includes('spinach') ||
-                    product.name.toLowerCase().includes('squash') ||
-                    product.name.toLowerCase().includes('mushroom') ||
-                    product.name.toLowerCase().includes('cabbage') ||
-                    product.name.toLowerCase().includes('celery') ||
-                    product.name.toLowerCase().includes('eggplant') ||
-                    product.name.toLowerCase().includes('kale') ||
-                    product.name.toLowerCase().includes('radish') ||
-                    product.name.toLowerCase().includes('beet') ||
-                    product.name.toLowerCase().includes('zucchini') ||
-                    product.name.toLowerCase().includes('asparagus') ||
-                    product.name.toLowerCase().includes('artichoke') ||
-                    product.name.toLowerCase().includes('brussel') ||
-                    product.name.toLowerCase().includes('bokchoy') ||
-                    product.name.toLowerCase().includes('corn') ||
-                    product.name.toLowerCase().includes('bean') ||
-                    product.name.toLowerCase().includes('ginger')
-                );
-            case 'Fruits':
-                return products.filter(product => 
-                    product.name.toLowerCase().includes('apple') ||
-                    product.name.toLowerCase().includes('cherry') ||
-                    product.name.toLowerCase().includes('lemon') ||
-                    product.name.toLowerCase().includes('grape') ||
-                    product.name.toLowerCase().includes('avocado') ||
-                    product.name.toLowerCase().includes('plantain')
-                );
-            case 'Herbs':
-                return products.filter(product => 
-                    product.name.toLowerCase().includes('garlic') ||
-                    product.name.toLowerCase().includes('ginger')
-                );
-            case 'Organic':
-                // For now, assume all products are organic since we don't have an organic field
-                return products;
-            default:
-                return products;
+        if (activeFilter === 'All Products') {
+            return products;
         }
+        return products.filter(product => product.product_type === activeFilter);
     };
 
     const filteredProducts = getFilteredProducts();
@@ -108,36 +65,15 @@ function AllProductsPage() {
                 <div className="container">
                     {/* Product Categories Filter */}
                     <div className="product-filters">
-                        <button 
-                            className={`filter-btn ${activeFilter === 'All Products' ? 'filter-btn-active' : ''}`}
-                            onClick={() => handleFilterClick('All Products')}
-                        >
-                            All Products
-                        </button>
-                        <button 
-                            className={`filter-btn ${activeFilter === 'Vegetables' ? 'filter-btn-active' : ''}`}
-                            onClick={() => handleFilterClick('Vegetables')}
-                        >
-                            Vegetables
-                        </button>
-                        <button 
-                            className={`filter-btn ${activeFilter === 'Fruits' ? 'filter-btn-active' : ''}`}
-                            onClick={() => handleFilterClick('Fruits')}
-                        >
-                            Fruits
-                        </button>
-                        <button 
-                            className={`filter-btn ${activeFilter === 'Herbs' ? 'filter-btn-active' : ''}`}
-                            onClick={() => handleFilterClick('Herbs')}
-                        >
-                            Herbs
-                        </button>
-                        <button 
-                            className={`filter-btn ${activeFilter === 'Organic' ? 'filter-btn-active' : ''}`}
-                            onClick={() => handleFilterClick('Organic')}
-                        >
-                            Organic
-                        </button>
+                        {productTypes.map((type) => (
+                            <button 
+                                key={type}
+                                className={`filter-btn ${activeFilter === type ? 'filter-btn-active' : ''}`}
+                                onClick={() => handleFilterClick(type)}
+                            >
+                                {type}
+                            </button>
+                        ))}
                     </div>
 
                     {/* Products Grid */}
