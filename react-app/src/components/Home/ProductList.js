@@ -9,6 +9,10 @@ function ProductList({product, user}) {
     const cart = useSelector(state => state.shoppingCart)
     const addItem = useAddItem(product, cart)
 
+    const handleAddToCart = () => {
+        addItem(1); // Call the function with quantity 1
+    };
+
     return (
         <div className='product-container' key={product.id}>
             <div className="product-card card">
@@ -25,7 +29,7 @@ function ProductList({product, user}) {
                     {user && (
                         <button 
                             className='product-quick-add'
-                            onClick={addItem}
+                            onClick={handleAddToCart}
                             title="Add to cart"
                         >
                             <i className="fas fa-plus"></i>
@@ -77,7 +81,7 @@ function ProductList({product, user}) {
                         {user && (
                             <button 
                                 className="btn btn-primary btn-sm product-add-btn"
-                                onClick={addItem}
+                                onClick={handleAddToCart}
                             >
                                 <i className="fas fa-shopping-cart"></i>
                                 Add to Cart
