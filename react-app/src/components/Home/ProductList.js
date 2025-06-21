@@ -93,7 +93,7 @@ function ProductList({product, user}) {
                     </div>
                     <div className="farmer-details">
                         <span className="farmer-label">Grown by</span>
-                        <span className="farmer-name">{product.username || 'Local Farmer'}</span>
+                        <span className="farmer-name">{product.username ? product.username.charAt(0).toUpperCase() + product.username.slice(1) : 'Local Farmer'}</span>
                     </div>
                     <div className="farmer-rating">
                         <i className="fas fa-star"></i>
