@@ -12,6 +12,7 @@ class Product(db.Model):
     price = db.Column(db.Numeric(precision=10, scale=2, asdecimal=False), nullable=False )
     quantity = db.Column(db.Integer , nullable=True, default=1)
     image = db.Column(db.Text, nullable=True)
+    product_type = db.Column(db.String(50), nullable=False, default='Vegetables')
     created_at = db.Column(db.Date , nullable=False)
     updated_at = db.Column(db.Date , nullable=False)
 
@@ -79,6 +80,7 @@ class Product(db.Model):
             'price': self.price,
             'quantity': self.quantity,
             'image': self.image,
+            'product_type': self.product_type,
             'created_at': str(self.created_at),
             'updated_at': str(self.updated_at)
         }

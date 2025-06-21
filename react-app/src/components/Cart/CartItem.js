@@ -9,12 +9,15 @@ const CartItem = ({ item }) => {
     const removeItem = useRemoveItem(product.id, cart)
     const subtractItem = useSubtractItem(product, cart)
 
-    if (!product) {
-        return null; // Product not found
+    // Safety checks for missing data
+    if (!product || !item) {
+        return null; // Product or item not found
     }
 
-    const unitPrice = product.price;
-    const totalPrice = item.price;
+    // Add null checks and fallbacks for price values
+    const unitPrice = product.price || 0;
+    const totalPrice = item.price || 0;
+    const quantity = item.quantity || 0;
 
     return (
         <div className="cart-item">
@@ -47,13 +50,13 @@ const CartItem = ({ item }) => {
                     <button 
                         className="quantity-btn quantity-btn-decrease"
                         onClick={subtractItem}
-                        disabled={item.quantity <= 1}
+                        disabled={quantity <= 1}
                         title="Decrease quantity"
                     >
                         <i className="fas fa-minus"></i>
                     </button>
                     
-                    <span className="cart-item-quantity">{item.quantity}</span>
+                    <span className="cart-item-quantity">{quantity}</span>
                     
                     <button 
                         className="quantity-btn quantity-btn-increase"

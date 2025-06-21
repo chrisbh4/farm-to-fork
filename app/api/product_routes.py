@@ -17,7 +17,17 @@ def create_product():
     form['csrf_token'].data = request.cookies['csrf_token']
     if form.validate_on_submit():
         data = form.data
-        new_product = Product(user_id=data['user_id'], name=data['name'] , description=data['description'], price= data['price'], quantity= data['quantity'] , image=data['image'],created_at = datetime.now(), updated_at= datetime.now())
+        new_product = Product(
+            user_id=data['user_id'], 
+            name=data['name'], 
+            description=data['description'], 
+            price=data['price'], 
+            quantity=data['quantity'], 
+            image=data['image'],
+            product_type=data['product_type'],
+            created_at = datetime.now(), 
+            updated_at= datetime.now()
+        )
         db.session.add(new_product)
         db.session.commit()
         return new_product.to_dict()
@@ -43,6 +53,7 @@ def product_page(id):
             product.price = new_data['price']
             product.quantity = new_data['quantity']
             product.image = new_data['image']
+            product.product_type = new_data['product_type']
             product.updated_at = datetime.now()
 
             db.session.add(product)

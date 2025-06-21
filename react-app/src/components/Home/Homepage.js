@@ -7,36 +7,35 @@ import { Modal } from '../../context/Modal';
 import SignUpForm from '../auth/SignUpForm';
 
 function HomePage() {
-    const [showAllProducts, setShowAllProducts] = useState(false);
-    const [filters, setFilters] = useState({});
-    const [size, setSize] = useState(null);
-    const [showSignUpModal, setShowSignUpModal] = useState(false);
+    const user = useSelector(state => state.session.user)
+    const products = useSelector(state => state.products)
     const history = useHistory()
+    const [showSignUpModal, setShowSignUpModal] = useState(false)
+    const [showAllProducts, setShowAllProducts] = useState(false)
+    const [activeFilter, setActiveFilter] = useState('All Products')
 
-    // Check if filters.size exists and set size value
-    useEffect(() => {
-        if (filters.size) {
-            setSize(filters.size);
-        }
-    }, [filters]);
-    
+    // Get unique product types from the products data
+    const productTypes = ['All Products', ...new Set(Object.values(products).map(product => product.product_type))]
+
+    // Filter products based on active filter
+    const filteredProducts = activeFilter === 'All Products' 
+        ? Object.values(products)
+        : Object.values(products).filter(product => product.product_type === activeFilter)
+
+    // Sort products by name
     function sortProductsByName(productA, productB) {
-        let nameA = productA.name.toUpperCase(); 
-        let nameB = productB.name.toUpperCase();
-        if (nameA < nameB) {
-            return -1;
-        }
-        if (nameA > nameB) {
-            return 1;
-        }
-        return 0;
+        return productA.name.localeCompare(productB.name)
     }
 
-    const products = Object.values(useSelector((state) => state.products)).sort(sortProductsByName);
-    const user = useSelector(state => state.session.user);
+    // Get displayed products (either all or limited)
+    const displayedProducts = showAllProducts 
+        ? filteredProducts.sort(sortProductsByName)
+        : filteredProducts.sort(sortProductsByName).slice(0, 8)
 
-    // Get featured products (first 8) or all products based on state
-    const displayedProducts = showAllProducts ? products : products.slice(0, 8);
+    const handleFilterChange = (filterType) => {
+        setActiveFilter(filterType)
+        setShowAllProducts(false) // Reset to show limited products when filter changes
+    }
 
     const scrollToProducts = () => {
         setShowAllProducts(true);
@@ -175,11 +174,15 @@ function HomePage() {
 
                     {/* Product Categories Filter (Future Feature) */}
                     <div className="product-filters">
-                        <button className="filter-btn filter-btn-active">All Products</button>
-                        <button className="filter-btn">Vegetables</button>
-                        <button className="filter-btn">Fruits</button>
-                        <button className="filter-btn">Herbs</button>
-                        <button className="filter-btn">Organic</button>
+                        {productTypes.map((type) => (
+                            <button 
+                                key={type}
+                                className={`filter-btn ${activeFilter === type ? 'filter-btn-active' : ''}`}
+                                onClick={() => handleFilterChange(type)}
+                            >
+                                {type}
+                            </button>
+                        ))}
                     </div>
 
                     {/* Products Grid */}
@@ -190,17 +193,17 @@ function HomePage() {
                     </div>
 
                     {/* View All Products Button */}
-                    {products.length > 8 && (
+                    {filteredProducts.length > 8 && (
                         <div className="products-footer">
                             <button className="btn btn-outline btn-lg" onClick={scrollToProducts}>
                                 {showAllProducts ? (
                                     <>
-                                        Showing All {products.length} Products
+                                        Showing All {filteredProducts.length} Products
                                         <i className="fas fa-check"></i>
                                     </>
                                 ) : (
                                     <>
-                                        View All {products.length} Products
+                                        View All {filteredProducts.length} Products
                                         <i className="fas fa-arrow-right"></i>
                                     </>
                                 )}

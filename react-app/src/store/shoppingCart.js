@@ -32,12 +32,49 @@ export const resetCart = () => ({
 
 const saveCart = (cart) => {
     try {
-        const jsonCart = JSON.stringify(cart)
+        // Clean up cart data before saving
+        const cleanCart = {};
+        for (const [productId, item] of Object.entries(cart)) {
+            if (item && typeof item === 'object' && item.productId && item.quantity && item.price) {
+                cleanCart[productId] = {
+                    productId: item.productId,
+                    quantity: Number(item.quantity) || 1,
+                    price: Number(item.price) || 0
+                };
+            }
+        }
+        const jsonCart = JSON.stringify(cleanCart)
         localStorage.setItem('cart', jsonCart)
     }
     catch (err) {
     // ignore
     }
+}
+
+const loadCartFromStorage = () => {
+    try {
+        const jsonCart = localStorage.getItem('cart')
+        if (jsonCart) {
+            const cart = JSON.parse(jsonCart)
+            // Clean up loaded cart data
+            const cleanCart = {};
+            for (const [productId, item] of Object.entries(cart)) {
+                if (item && typeof item === 'object' && item.productId && item.quantity && item.price) {
+                    cleanCart[productId] = {
+                        productId: item.productId,
+                        quantity: Number(item.quantity) || 1,
+                        price: Number(item.price) || 0
+                    };
+                }
+            }
+            return cleanCart
+        }
+    }
+    catch (err) {
+        // If there's an error loading cart, clear it
+        localStorage.removeItem('cart')
+    }
+    return {}
 }
 
 export const useAddItem = (product, cart) => {
@@ -90,7 +127,7 @@ export const useResetCartItems = () => {
 }
 
 
-let initialState = {}
+let initialState = loadCartFromStorage()
 
 
 export default function reducer(state = initialState, action) {

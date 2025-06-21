@@ -18,11 +18,19 @@ const ProductEditForm = () => {
   const [price, setPrice] = useState(product?.price || '');
   const [quantity] = useState(product?.quantity || 1);
   const [image, setImage] = useState(product?.image || '');
+  const [productType, setProductType] = useState(product?.product_type || 'Vegetables');
   const [isLoading, setIsLoading] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const dispatch = useDispatch();
   const history = useHistory();
+
+  const PRODUCT_TYPES = [
+    { value: 'Vegetables', label: 'Vegetables' },
+    { value: 'Fruits', label: 'Fruits' },
+    { value: 'Herbs', label: 'Herbs' },
+    { value: 'Organic', label: 'Organic' }
+  ];
 
   // Redirect if product not found
   if (!product) {
@@ -47,6 +55,8 @@ const ProductEditForm = () => {
     if (!price || price <= 0) newErrors.price = 'Price must be greater than 0';
     if (price > 10000) newErrors.price = 'Price must be less than $10,000';
 
+    if (!productType) newErrors.productType = 'Product type is required';
+
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       setIsLoading(false);
@@ -54,7 +64,7 @@ const ProductEditForm = () => {
     }
 
     try {
-      const data = await dispatch(fetchEditProduct(product.id, name, description, parseFloat(price), quantity, image));
+      const data = await dispatch(fetchEditProduct(product.id, name, description, parseFloat(price), quantity, image, productType));
       
       if (data) {
         if (!data.errors) {
@@ -236,6 +246,32 @@ const ProductEditForm = () => {
                   }}
                 />
               </div>
+            )}
+          </div>
+
+          {/* Product Type */}
+          <div className="form-group">
+            <label htmlFor="productType" className="form-label">
+              Product Type <span className="required">*</span>
+            </label>
+            <select
+              id="productType"
+              className={`form-select ${errors.productType ? 'form-input-error' : ''}`}
+              value={productType}
+              onChange={(e) => setProductType(e.target.value)}
+              disabled={isLoading}
+            >
+              {PRODUCT_TYPES.map((type) => (
+                <option key={type.value} value={type.value}>
+                  {type.label}
+                </option>
+              ))}
+            </select>
+            {errors.productType && (
+              <p className="form-error">
+                <i className="fas fa-exclamation-circle"></i>
+                {errors.productType}
+              </p>
             )}
           </div>
 
