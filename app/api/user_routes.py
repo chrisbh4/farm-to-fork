@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 from flask_login import login_required, current_user
-from app.models import User, db
+from app.models import User, Product, db
 from app.forms import SignUpForm
 
 user_routes = Blueprint('users', __name__)
@@ -81,3 +81,15 @@ def update_user(id):
     except Exception as e:
         db.session.rollback()
         return {'errors': ['An error occurred while updating your profile']}, 500
+
+
+@user_routes.route('/<int:id>/products')
+@login_required
+def user_products(id):
+    """Get all products for a specific user"""
+    user = User.query.get(id)
+    if not user:
+        return {'errors': ['User not found']}, 404
+    
+    products = Product.query.filter(Product.user_id == id).all()
+    return {'products': [product.to_dict() for product in products]}

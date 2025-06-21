@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import UserEditForm from './UserEditForm';
+import UserProductsList from './UserProductsList';
 import './User.css';
 
 function User() {
   const [user, setUser] = useState({});
+  const [userProducts, setUserProducts] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const { userId } = useParams();
@@ -23,10 +25,18 @@ function User() {
     const fetchUser = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch(`/api/users/${userId}`);
-        if (response.ok) {
-          const userData = await response.json();
+        // Fetch user data
+        const userResponse = await fetch(`/api/users/${userId}`);
+        if (userResponse.ok) {
+          const userData = await userResponse.json();
           setUser(userData);
+          
+          // Fetch user's products
+          const productsResponse = await fetch(`/api/users/${userId}/products`);
+          if (productsResponse.ok) {
+            const productsData = await productsResponse.json();
+            setUserProducts(productsData.products || []);
+          }
         } else {
           // User not found or error
           history.push('/');
@@ -147,7 +157,7 @@ function User() {
                 <i className="fas fa-leaf"></i>
               </div>
               <div className="stat-content">
-                <h3 className="stat-number">12</h3>
+                <h3 className="stat-number">{userProducts.length}</h3>
                 <p className="stat-label">Products Listed</p>
               </div>
             </div>
@@ -164,11 +174,11 @@ function User() {
             
             <div className="stat-card">
               <div className="stat-icon">
-                <i className="fas fa-shopping-cart"></i>
+                <i className="fas fa-calendar-alt"></i>
               </div>
               <div className="stat-content">
-                <h3 className="stat-number">156</h3>
-                <p className="stat-label">Orders Completed</p>
+                <h3 className="stat-number">{new Date().getFullYear()}</h3>
+                <p className="stat-label">Member Since</p>
               </div>
             </div>
           </div>
@@ -192,13 +202,10 @@ function User() {
             <div className="profile-section">
               <h2 className="section-title">
                 <i className="fas fa-seedling"></i>
-                Recent Products
+                {canEdit ? 'My Products' : `${user.username}'s Products`}
               </h2>
               <div className="section-content">
-                <div className="recent-products-placeholder">
-                  <i className="fas fa-box-open"></i>
-                  <p>Product listings will appear here soon!</p>
-                </div>
+                <UserProductsList userId={userId} />
               </div>
             </div>
           </div>
