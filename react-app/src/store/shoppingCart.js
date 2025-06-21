@@ -42,12 +42,12 @@ const saveCart = (cart) => {
 
 export const useAddItem = (product, cart) => {
     const dispatch = useDispatch()
-    return async function() {
+    return async function(quantity = 1) {
         if (product.id in cart) {
-            cart[product.id].quantity += 1
+            cart[product.id].quantity += quantity
             cart[product.id].price = product.price * cart[product.id].quantity
         } else {
-            cart[product.id] = { productId: product.id, quantity: 1, price: product.price }
+            cart[product.id] = { productId: product.id, quantity: quantity, price: product.price * quantity }
         }
         await dispatch(loadCart(cart));
         saveCart(cart)
@@ -100,7 +100,7 @@ export default function reducer(state = initialState, action) {
 
     switch (action.type) {
         case LOAD_CART:
-            return { ...state, ...action.products };
+            return { ...state, ...action.cart };
         case ADD_TO_CART:
             item = action.item
             if (item.id in newState) {

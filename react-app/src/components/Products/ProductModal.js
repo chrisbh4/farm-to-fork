@@ -9,10 +9,17 @@ const ProductModal = ({ product, userId, setEditMode }) => {
   const addItem = useAddItem(product, cart);
   const [imageError, setImageError] = useState(false);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const [quantity, setQuantity] = useState(1);
+
+  const handleQuantityChange = (newQuantity) => {
+    if (newQuantity >= 1 && newQuantity <= 100) {
+      setQuantity(newQuantity);
+    }
+  };
 
   const handleAddToCart = async () => {
     setIsAddingToCart(true);
-    await addItem();
+    await addItem(quantity);
     
     // Show success feedback briefly
     setTimeout(() => {
@@ -137,11 +144,11 @@ const ProductModal = ({ product, userId, setEditMode }) => {
               <div className="quantity-selector">
                 <label className="quantity-label">Quantity (lbs):</label>
                 <div className="quantity-controls">
-                  <button className="quantity-btn" disabled>
+                  <button className="quantity-btn" onClick={() => handleQuantityChange(quantity - 1)}>
                     <i className="fas fa-minus"></i>
                   </button>
-                  <span className="quantity-display">1</span>
-                  <button className="quantity-btn" disabled>
+                  <span className="quantity-display">{quantity}</span>
+                  <button className="quantity-btn" onClick={() => handleQuantityChange(quantity + 1)}>
                     <i className="fas fa-plus"></i>
                   </button>
                 </div>
@@ -160,7 +167,7 @@ const ProductModal = ({ product, userId, setEditMode }) => {
                 ) : (
                   <>
                     <i className="fas fa-shopping-cart"></i>
-                    Add to Cart - ${product.price.toFixed(2)}
+                    Add to Cart - ${(product.price * quantity).toFixed(2)}
                   </>
                 )}
               </button>
