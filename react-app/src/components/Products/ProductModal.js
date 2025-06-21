@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom';
 import './Product.css'
 import { useSelector } from 'react-redux'
 import { useAddItem } from '../../store/shoppingCart'
+import { Modal } from '../../context/Modal'
+import SignUpForm from '../auth/SignUpForm'
+import LoginForm from '../auth/LoginForm'
 
 const ProductModal = ({ product, userId, setEditMode, setShowProductModal }) => {
   const cart = useSelector(state => state.shoppingCart);
@@ -10,6 +13,8 @@ const ProductModal = ({ product, userId, setEditMode, setShowProductModal }) => 
   const [imageError, setImageError] = useState(false);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const [quantity, setQuantity] = useState(1);
+  const [showSignUpModal, setShowSignUpModal] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   const handleQuantityChange = (newQuantity) => {
     if (newQuantity >= 1 && newQuantity <= 100) {
@@ -203,11 +208,11 @@ const ProductModal = ({ product, userId, setEditMode, setShowProductModal }) => 
                   Sign up or log in to add fresh produce to your cart and support local farmers.
                 </p>
                 <div className="guest-cta-buttons">
-                  <button className="btn btn-primary btn-lg">
+                  <button className="btn btn-primary btn-lg" onClick={() => setShowSignUpModal(true)}>
                     <i className="fas fa-user-plus"></i>
                     Sign Up Free
                   </button>
-                  <button className="btn btn-secondary btn-lg">
+                  <button className="btn btn-secondary btn-lg" onClick={() => setShowLoginModal(true)}>
                     <i className="fas fa-sign-in-alt"></i>
                     Log In
                   </button>
@@ -217,6 +222,30 @@ const ProductModal = ({ product, userId, setEditMode, setShowProductModal }) => 
           )}
         </div>
       </div>
+
+      {/* Sign Up Modal */}
+      {showSignUpModal && (
+        <Modal onClose={() => setShowSignUpModal(false)}>
+          <SignUpForm onClose={() => {
+            setShowSignUpModal(false);
+            if (setShowProductModal) {
+              setShowProductModal(false);
+            }
+          }} />
+        </Modal>
+      )}
+
+      {/* Login Modal */}
+      {showLoginModal && (
+        <Modal onClose={() => setShowLoginModal(false)}>
+          <LoginForm onClose={() => {
+            setShowLoginModal(false);
+            if (setShowProductModal) {
+              setShowProductModal(false);
+            }
+          }} />
+        </Modal>
+      )}
     </div>
   );
 };
