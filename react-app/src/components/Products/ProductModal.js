@@ -122,7 +122,7 @@ const ProductModal = ({ product, userId, setEditMode, setShowProductModal }) => 
                 <i className="fas fa-user-circle"></i>
               </div>
               <div className="farmer-details">
-                <h4 className="farmer-name">Local Farmer</h4>
+                <h4 className="farmer-name">{product.username || 'Local Farmer'}</h4>
                 <p className="farmer-location">
                   <i className="fas fa-map-marker-alt"></i>
                   Farm-to-table freshness

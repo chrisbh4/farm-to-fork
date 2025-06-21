@@ -16,6 +16,7 @@ class Product(db.Model):
     updated_at = db.Column(db.Date , nullable=False)
 
     reviews = db.relationship("Review", backref=db.backref("products"), lazy=True )
+    user = db.relationship("User", backref=db.backref("products"), lazy=True )
 
 
 # Getters & Setters
@@ -72,6 +73,7 @@ class Product(db.Model):
         return {
             'id': self.id,
             'user_id': self.user_id,
+            'username': self.user.username if self.user else None,
             'name': self.name,
             'description': self.description,
             'price': self.price,
