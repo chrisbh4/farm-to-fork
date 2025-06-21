@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import LogoutButton from './auth/LogoutButton';
@@ -26,6 +26,11 @@ const NavBar = () => {
   const handleDemoLogin = async () => {
     await dispatch(login('demo@aa.io', 'password'));
   };
+
+  // Close dropdown when user state changes (login/logout)
+  useEffect(() => {
+    setShowUserDropdown(false);
+  }, [user]);
 
   return (
     <>
@@ -127,19 +132,19 @@ const NavBar = () => {
                         <Link 
                           to="/products/create" 
                           className="navbar-user-dropdown-item"
-                          onClick={() => setShowUserDropdown(false)}
+                          // onClick={() => setShowUserDropdown(false)}
                         >
                           <i className="fas fa-plus"></i>
                           Create Listing
                         </Link>
-                        <div className="navbar-user-dropdown-item navbar-user-dropdown-item-disabled">
+                        {/* <div className="navbar-user-dropdown-item navbar-user-dropdown-item-disabled">
                           <i className="fas fa-heart"></i>
                           Favorites (Soon)
                         </div>
                         <div className="navbar-user-dropdown-item navbar-user-dropdown-item-disabled">
                           <i className="fas fa-history"></i>
                           Order History (Soon)
-                        </div>
+                        </div> */}
                       </div>
                       
                       <div className="navbar-user-dropdown-divider"></div>
@@ -194,6 +199,7 @@ const NavBar = () => {
         <div 
           className="navbar-dropdown-overlay"
           onClick={() => setShowUserDropdown(false)}
+          style={{ zIndex: 1 }}
         />
       )}
 
