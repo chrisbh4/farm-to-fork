@@ -37,10 +37,10 @@ function ProductList({product, user}) {
                     )}
 
                     {/* Product Badge */}
-                    <div className="product-badge">
+                    {/* <div className="product-badge">
                         <i className="fas fa-leaf"></i>
                         <span>Fresh</span>
-                    </div>
+                    </div> */}
                 </div>
 
                 {/* Product Info */}
@@ -99,10 +99,10 @@ function ProductList({product, user}) {
                         <span className="farmer-label">Grown by</span>
                         <span className="farmer-name">{product.username ? product.username.charAt(0).toUpperCase() + product.username.slice(1) : 'Local Farmer'}</span>
                     </div>
-                    <div className="farmer-rating">
+                    {/* <div className="farmer-rating">
                         <i className="fas fa-star"></i>
                         <span>4.9</span>
-                    </div>
+                    </div> */}
                 </div>
             </div>
 
