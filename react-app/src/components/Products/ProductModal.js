@@ -4,7 +4,7 @@ import './Product.css'
 import { useSelector } from 'react-redux'
 import { useAddItem } from '../../store/shoppingCart'
 
-const ProductModal = ({ product, userId, setEditMode }) => {
+const ProductModal = ({ product, userId, setEditMode, setShowProductModal }) => {
   const cart = useSelector(state => state.shoppingCart);
   const addItem = useAddItem(product, cart);
   const [imageError, setImageError] = useState(false);
@@ -21,9 +21,12 @@ const ProductModal = ({ product, userId, setEditMode }) => {
     setIsAddingToCart(true);
     await addItem(quantity);
     
-    // Show success feedback briefly
+    // Show success feedback briefly, then close modal
     setTimeout(() => {
       setIsAddingToCart(false);
+      if (setShowProductModal) {
+        setShowProductModal(false);
+      }
     }, 800);
   };
 
