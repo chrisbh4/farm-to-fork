@@ -264,6 +264,124 @@
   text-align: center;
 }
 
+/* Search Info Section */
+.search-info {
+  margin-bottom: var(--space-6);
+  padding: var(--space-4);
+  background-color: var(--primary-50);
+  border: 1px solid var(--primary-200);
+  border-radius: var(--radius-lg);
+}
+
+.search-info-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.search-info-text {
+  font-size: var(--text-sm);
+  color: var(--gray-700);
+}
+
+.search-info-text strong {
+  color: var(--primary-700);
+  font-weight: 600;
+}
+
+.search-clear-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--gray-600);
+  background-color: white;
+  border: 1px solid var(--gray-300);
+  border-radius: var(--radius-base);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.search-clear-btn:hover {
+  color: var(--error-600);
+  border-color: var(--error-300);
+  background-color: var(--error-50);
+}
+
+.search-clear-btn i {
+  font-size: var(--text-xs);
+}
+
+/* Page Header Section */
+.products-page {
+  min-height: 100vh;
+  background-color: var(--gray-50);
+}
+
+.page-header {
+  padding: var(--space-16) 0 var(--space-8) 0;
+  background: linear-gradient(135deg, var(--primary-50) 0%, var(--primary-100) 100%);
+  border-bottom: 1px solid var(--primary-200);
+}
+
+.page-header-content {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.page-title {
+  font-size: var(--text-4xl);
+  font-weight: 700;
+  color: var(--gray-900);
+  margin: 0 0 var(--space-4) 0;
+  letter-spacing: -0.025em;
+}
+
+.page-subtitle {
+  font-size: var(--text-lg);
+  color: var(--gray-600);
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* No Products Section */
+.no-products {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-16) var(--space-4);
+  text-align: center;
+}
+
+.no-products-content {
+  max-width: 500px;
+}
+
+.no-products-icon {
+  font-size: var(--text-6xl);
+  color: var(--gray-400);
+  margin-bottom: var(--space-6);
+}
+
+.no-products-title {
+  font-size: var(--text-2xl);
+  font-weight: 600;
+  color: var(--gray-900);
+  margin: 0 0 var(--space-4) 0;
+}
+
+.no-products-subtitle {
+  font-size: var(--text-base);
+  color: var(--gray-600);
+  margin: 0 0 var(--space-8) 0;
+  line-height: 1.6;
+}
+
 /* CTA Section */
 .cta-section {
   padding: var(--space-24) 0;

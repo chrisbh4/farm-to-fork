@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import LogoutButton from './auth/LogoutButton';
 import './NavBar.css'
@@ -19,12 +19,26 @@ const NavBar = () => {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showSignUpModal, setShowSignUpModal] = useState(false);
   const [showUserDropdown, setShowUserDropdown] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const history = useHistory();
 
   // Calculate total items in cart
   const cartItemCount = Object.values(cartItems).reduce((total, item) => total + (item.quantity || 0), 0);
 
   const handleDemoLogin = async () => {
     await dispatch(login('demo@aa.io', 'password'));
+  };
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      // Navigate to products page with search query
+      history.push(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
+
+  const handleSearchInputChange = (e) => {
+    setSearchQuery(e.target.value);
   };
 
   // Close dropdown when user state changes (login/logout)
@@ -53,16 +67,18 @@ const NavBar = () => {
             </Link>
           </div>
 
-          {/* Center Section - Search (Future Feature) */}
+          {/* Center Section - Search */}
           <div className="navbar-center">
-            <div className="navbar-search">
+            <form className="navbar-search" onSubmit={handleSearch}>
               <i className="fas fa-search navbar-search-icon"></i>
               <input 
                 type="text" 
                 placeholder="Search fresh produce..." 
                 className="navbar-search-input"
+                value={searchQuery}
+                onChange={handleSearchInputChange}
               />
-            </div>
+            </form>
           </div>
 
           {/* Right Section - User Actions */}
