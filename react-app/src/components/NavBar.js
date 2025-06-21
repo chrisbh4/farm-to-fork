@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { Link, NavLink, useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import LogoutButton from './auth/LogoutButton';
 import './NavBar.css'
@@ -8,7 +8,7 @@ import { Modal } from '../context/Modal'
 import LoginForm from './auth/LoginForm';
 import SignUpForm from './auth/SignUpForm'
 import ShoppingCart from './Cart/ShoppingCart';
-import { login, logout } from '../store/session';
+import { login } from '../store/session';
 
 const NavBar = () => {
   const user = useSelector(state => state.session.user);
@@ -53,14 +53,14 @@ const NavBar = () => {
         <div className="navbar-container">
           {/* Left Section - Logo & Menu */}
           <div className="navbar-left">
-            <button 
+            <button
               className="navbar-menu-btn"
               onClick={() => setOptionsOn(!optionsOn)}
               aria-label="Open menu"
             >
               <i className="fas fa-bars" />
             </button>
-            
+
             <Link to="/" className="navbar-home-btn" aria-label="Go to home">
               <i className="fas fa-home"></i>
               <span className="navbar-home-text">Home</span>
@@ -71,9 +71,9 @@ const NavBar = () => {
           <div className="navbar-center">
             <form className="navbar-search" onSubmit={handleSearch}>
               <i className="fas fa-search navbar-search-icon"></i>
-              <input 
-                type="text" 
-                placeholder="Search fresh produce..." 
+              <input
+                type="text"
+                placeholder="Search fresh produce..."
                 className="navbar-search-input"
                 value={searchQuery}
                 onChange={handleSearchInputChange}
@@ -90,9 +90,9 @@ const NavBar = () => {
                   <i className="fas fa-plus"></i>
                   <span>Sell Produce</span>
                 </Link>
-                
+
                 {/* Cart Button */}
-                <button 
+                <button
                   className="navbar-cart-btn"
                   onClick={() => setCart(!cart)}
                   aria-label="Shopping cart"
@@ -105,12 +105,12 @@ const NavBar = () => {
 
                 {/* User Profile Menu */}
                 <div className="navbar-user-menu-container">
-                  <button 
+                  <button
                     className="navbar-user-menu"
                     onClick={() => setShowUserDropdown(!showUserDropdown)}
                     aria-label="User menu"
                   >
-                    <img 
+                    <img
                       src={`https://ui-avatars.com/api/?name=${user.username}&background=16a34a&color=fff`}
                       alt={user.username}
                       className="navbar-user-avatar"
@@ -123,7 +123,7 @@ const NavBar = () => {
                   {showUserDropdown && (
                     <div className="navbar-user-dropdown">
                       <div className="navbar-user-dropdown-header">
-                        <img 
+                        <img
                           src={`https://ui-avatars.com/api/?name=${user.username}&background=16a34a&color=fff`}
                           alt={user.username}
                           className="navbar-user-dropdown-avatar"
@@ -133,20 +133,20 @@ const NavBar = () => {
                           <span className="navbar-user-dropdown-email">{user.email}</span>
                         </div>
                       </div>
-                      
+
                       <div className="navbar-user-dropdown-divider"></div>
-                      
+
                       <div className="navbar-user-dropdown-menu">
-                        <Link 
-                          to={`/users/${user.id}`} 
+                        <Link
+                          to={`/users/${user.id}`}
                           className="navbar-user-dropdown-item"
                           onClick={() => setShowUserDropdown(false)}
                         >
                           <i className="fas fa-user"></i>
                           My Profile
                         </Link>
-                        <Link 
-                          to="/products/create" 
+                        <Link
+                          to="/products/create"
                           className="navbar-user-dropdown-item"
                           // onClick={() => setShowUserDropdown(false)}
                         >
@@ -162,14 +162,14 @@ const NavBar = () => {
                           Order History (Soon)
                         </div> */}
                       </div>
-                      
+
                       <div className="navbar-user-dropdown-divider"></div>
-                      
+
                       <div className="navbar-user-dropdown-footer">
-                        <LogoutButton 
-                          setCart={setCart} 
-                          cart={cart} 
-                          setShowLoginModal={setShowLoginModal} 
+                        <LogoutButton
+                          setCart={setCart}
+                          cart={cart}
+                          setShowLoginModal={setShowLoginModal}
                           setShowSignUpModal={setShowSignUpModal}
                         />
                       </div>
@@ -180,7 +180,7 @@ const NavBar = () => {
             ) : (
               <div className="navbar-auth-actions">
                 {/* Demo Login Button */}
-                <button 
+                <button
                   className="navbar-demo-btn"
                   onClick={handleDemoLogin}
                   title="Try the app with a demo account"
@@ -190,7 +190,7 @@ const NavBar = () => {
                 </button>
 
                 {/* Login Button */}
-                <button 
+                <button
                   className="navbar-login-btn"
                   onClick={() => setShowLoginModal(true)}
                 >
@@ -198,7 +198,7 @@ const NavBar = () => {
                 </button>
 
                 {/* Sign Up Button */}
-                <button 
+                <button
                   className="navbar-signup-btn"
                   onClick={() => setShowSignUpModal(true)}
                 >
@@ -212,7 +212,7 @@ const NavBar = () => {
 
       {/* Dropdown Overlay */}
       {showUserDropdown && (
-        <div 
+        <div
           className="navbar-dropdown-overlay"
           onClick={() => setShowUserDropdown(false)}
           style={{ zIndex: 1 }}
@@ -224,7 +224,7 @@ const NavBar = () => {
         <div className="sidebar-container">
           <div className="sidebar-header">
             <h3 className="sidebar-title">Menu</h3>
-            <button 
+            <button
               className="sidebar-close-btn"
               onClick={() => setOptionsOn(!optionsOn)}
               aria-label="Close menu"
@@ -237,7 +237,7 @@ const NavBar = () => {
             {user ? (
               <div className="sidebar-user-section">
                 <div className="sidebar-user-info">
-                  <img 
+                  <img
                     src={`https://ui-avatars.com/api/?name=${user.username}&background=16a34a&color=fff`}
                     alt={user.username}
                     className="sidebar-user-avatar"
@@ -249,8 +249,8 @@ const NavBar = () => {
                 </div>
 
                 <div className="sidebar-menu-items">
-                  <Link 
-                    to="/products/create" 
+                  <Link
+                    to="/products/create"
                     className="sidebar-menu-item"
                     onClick={() => {
                       setOptionsOn(false);
@@ -259,7 +259,7 @@ const NavBar = () => {
                     <i className="fas fa-plus"></i>
                     Create New Listing
                   </Link>
-                  
+
                   <div className="sidebar-menu-item">
                     <i className="fas fa-history"></i>
                     Order History (Coming Soon)
@@ -267,11 +267,11 @@ const NavBar = () => {
                 </div>
 
                 <div className="sidebar-footer">
-                  <LogoutButton 
-                    setCart={setCart} 
-                    cart={cart} 
-                    setShowLoginModal={setShowLoginModal} 
-                    setShowSignUpModal={setShowSignUpModal} 
+                  <LogoutButton
+                    setCart={setCart}
+                    cart={cart}
+                    setShowLoginModal={setShowLoginModal}
+                    setShowSignUpModal={setShowSignUpModal}
                   />
                 </div>
               </div>
@@ -281,9 +281,9 @@ const NavBar = () => {
                   <h4>Join SpudHub Today!</h4>
                   <p>Connect directly with local farmers and discover the freshest produce in your area.</p>
                 </div>
-                
+
                 <div className="sidebar-auth-buttons">
-                  <button 
+                  <button
                     className="btn btn-primary btn-lg"
                     onClick={() => {
                       setShowSignUpModal(true);
@@ -292,7 +292,7 @@ const NavBar = () => {
                   >
                     Sign Up Free
                   </button>
-                  <button 
+                  <button
                     className="btn btn-demo btn-lg"
                     onClick={() => {
                       handleDemoLogin();
@@ -303,7 +303,7 @@ const NavBar = () => {
                     <i className="fas fa-play"></i>
                     Try Demo
                   </button>
-                  <button 
+                  <button
                     className="btn btn-secondary btn-lg"
                     onClick={() => {
                       setShowLoginModal(true);
@@ -339,7 +339,7 @@ const NavBar = () => {
         <div className="cart-container">
           <div className="cart-header">
             <h3 className="cart-title">Your Cart</h3>
-            <button 
+            <button
               className="cart-close-btn"
               onClick={() => setCart(!cart)}
               aria-label="Close cart"
@@ -356,7 +356,7 @@ const NavBar = () => {
 
       {/* Overlay for sidebars */}
       {(optionsOn || cart) && (
-        <div 
+        <div
           className="sidebar-overlay"
           onClick={() => {
             setOptionsOn(false);
