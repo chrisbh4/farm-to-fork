@@ -2,7 +2,7 @@ import { useSelector } from 'react-redux'
 import { useState, useEffect } from 'react'
 import ProductList from '../Home/ProductList';
 
-function ProductsPage() {
+function AllProductsPage() {
     const [filters, setFilters] = useState({});
     const [size, setSize] = useState(null);
     const [activeFilter, setActiveFilter] = useState('All Products');
@@ -172,4 +172,4 @@ function ProductsPage() {
     )
 }
 
-export default ProductsPage 
+export default AllProductsPage 
