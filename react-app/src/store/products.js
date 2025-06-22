@@ -36,20 +36,10 @@ export const fetchAllProducts = () => async (dispatch) => {
     }
 }
 
-export const fetchCreateProduct = (user_id, name, description, price, quantity, image, product_type) => async (dispatch) => {
-
+export const fetchCreateProduct = (formData) => async (dispatch) => {
     const response = await fetch('/api/products/create', {
         method: "POST",
-        headers: { 'Content-Type': "application/json" },
-        body: JSON.stringify({
-            user_id,
-            name,
-            description,
-            price,
-            quantity,
-            image,
-            product_type
-        })
+        body: formData  // FormData handles the Content-Type header automatically
     })
 
     const data = await response.json()

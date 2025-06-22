@@ -3,7 +3,61 @@ from app.models import Product, db
 from datetime import date, datetime
 from app.forms.product_create_form import ProductCreateForm
 from app.forms.product_edit_form import ProductEditForm
+import boto3
+import botocore
+import os
+import uuid
+
+BUCKET_NAME = os.environ.get("S3_BUCKET")
+S3_LOCATION = f"https://{BUCKET_NAME}.s3.amazonaws.com/"
+ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif", "webp"}
+
 product_routes = Blueprint("products", __name__)
+
+def allowed_file(filename):
+    return "." in filename and \
+           filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def get_unique_filename(filename):
+    ext = filename.rsplit(".", 1)[1].lower()
+    unique_filename = uuid.uuid4().hex
+    return f"{unique_filename}.{ext}"
+
+def upload_file_to_s3(file, bucket_name, acl="public-read"):
+    try:
+        s3 = boto3.client(
+            "s3",
+            aws_access_key_id=os.environ.get("S3_KEY"),
+            aws_secret_access_key=os.environ.get("S3_SECRET")
+        )
+        s3.upload_fileobj(
+            file,
+            bucket_name,
+            file.filename,
+            ExtraArgs={
+                "ACL": acl,
+                "ContentType": file.content_type
+            }
+        )
+    except Exception as e:
+        print("Something Happened: ", e)
+        return e
+    return f"{S3_LOCATION}{file.filename}"
+
+def remove_file_from_s3(file_url, bucket_name):
+    try:
+        s3 = boto3.client(
+            "s3",
+            aws_access_key_id=os.environ.get("S3_KEY"),
+            aws_secret_access_key=os.environ.get("S3_SECRET")
+        )
+        # Extract filename from URL
+        filename = file_url.replace(S3_LOCATION, "")
+        s3.delete_object(Bucket=bucket_name, Key=filename)
+    except Exception as e:
+        print("Something Happened: ", e)
+        return e
+    return True
 
 @product_routes.route("/")
 def products():
@@ -17,13 +71,41 @@ def create_product():
     form['csrf_token'].data = request.cookies['csrf_token']
     if form.validate_on_submit():
         data = form.data
+        
+        # Handle image upload
+        image_url = None
+        if data['image']:
+            image = data['image']
+            if not allowed_file(image.filename):
+                return {'errors': {'image': ['Invalid file type. Please upload an image file.']}}, 400
+            
+            # Try S3 upload, but fallback gracefully if it fails
+            try:
+                if BUCKET_NAME:  # Only try S3 if bucket is configured
+                    image.filename = get_unique_filename(image.filename)
+                    upload_result = upload_file_to_s3(image, BUCKET_NAME)
+                    
+                    if isinstance(upload_result, str):  # Success case
+                        image_url = upload_result
+                    else:
+                        print(f"S3 upload failed: {upload_result}")
+                        # Continue without image for now
+                        image_url = None
+                else:
+                    print("S3 not configured, skipping image upload")
+                    image_url = None
+            except Exception as e:
+                print(f"Image upload error: {e}")
+                # Continue without image instead of failing the entire request
+                image_url = None
+        
         new_product = Product(
             user_id=data['user_id'], 
             name=data['name'], 
             description=data['description'], 
             price=data['price'], 
             quantity=data['quantity'], 
-            image=data['image'],
+            image=image_url,
             product_type=data['product_type'],
             created_at = datetime.now(), 
             updated_at= datetime.now()
@@ -32,8 +114,7 @@ def create_product():
         db.session.commit()
         return new_product.to_dict()
     else:
-
-        return {'errors':form.errors},500
+        return {'errors':form.errors},400
 
 
 @product_routes.route('/<int:id>', methods=['GET', 'PUT', 'DELETE'])

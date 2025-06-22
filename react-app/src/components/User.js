@@ -172,7 +172,7 @@ function User() {
           {/* Profile Content */}
           <div className="user-profile-content">
             <div className="profile-section">
-              <h2 className="section-title">
+              <h2 className="user-profile-section-title">
                 <i className="fas fa-info-circle"></i>
                 About
               </h2>
