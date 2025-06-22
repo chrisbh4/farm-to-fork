@@ -16,6 +16,7 @@ function ProductList({product, user}) {
     return (
         <div className='product-container' key={product.id}>
             <div className="product-card card">
+                
                 {/* Product Image */}
                 <div className="product-image-container">
                     <img 
@@ -56,7 +57,7 @@ function ProductList({product, user}) {
                         <div className="product-meta">
                             <span className="product-category">
                                 <i className="fas fa-tag"></i>
-                                Organic Produce
+                                {product.product_type}
                             </span>
                         </div>
 

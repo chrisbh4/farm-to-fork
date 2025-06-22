@@ -165,10 +165,10 @@ const UserProductCard = ({ product, canManage, onViewDetails }) => {
             e.target.src = 'https://via.placeholder.com/300x200/f3f4f6/9ca3af?text=No+Image';
           }}
         />
-        <div className="product-type-badge">
+        {/* <div className="product-type-badge">
           <i className="fas fa-tag"></i>
           {product.product_type}
-        </div>
+        </div> */}
         {canManage && (
           <div className="product-actions-overlay">
             <Link 
@@ -208,15 +208,15 @@ const UserProductCard = ({ product, canManage, onViewDetails }) => {
             : product.description
           }
         </p>
-
         <div className="product-meta">
           <div className="meta-item">
             <i className="fas fa-calendar-alt"></i>
             <span>Listed {formatDate(product.created_at)}</span>
           </div>
+          
           <div className="meta-item">
-            <i className="fas fa-box"></i>
-            <span>Qty: {product.quantity}</span>
+          <i className="fas fa-tag"></i>
+          {product.product_type}
           </div>
         </div>
 
