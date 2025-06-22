@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useHistory } from 'react-router-dom';
 import './Homepage.css'
 import ProductList from './ProductList';
@@ -18,7 +18,7 @@ function HomePage() {
     const productTypes = ['All Products', ...new Set(Object.values(products).map(product => product.product_type))]
 
     // Filter products based on active filter
-    const filteredProducts = activeFilter === 'All Products' 
+    const filteredProducts = activeFilter === 'All Products'
         ? Object.values(products)
         : Object.values(products).filter(product => product.product_type === activeFilter)
 
@@ -28,7 +28,7 @@ function HomePage() {
     }
 
     // Get displayed products (either all or limited)
-    const displayedProducts = showAllProducts 
+    const displayedProducts = showAllProducts
         ? filteredProducts.sort(sortProductsByName)
         : filteredProducts.sort(sortProductsByName).slice(0, 8)
 
@@ -43,7 +43,7 @@ function HomePage() {
         setTimeout(() => {
             const productsSection = document.getElementById('products-section');
             if (productsSection) {
-                productsSection.scrollIntoView({ 
+                productsSection.scrollIntoView({
                     behavior: 'smooth',
                     block: 'start'
                 });
@@ -62,19 +62,19 @@ function HomePage() {
                                 Farm Fresh to Your Door
                             </h1>
                             <p className="hero-subtitle">
-                                Connect directly with local farmers and discover the freshest, 
-                                most delicious produce in your community. Support sustainable 
+                                Connect directly with local farmers and discover the freshest,
+                                most delicious produce in your community. Support sustainable
                                 agriculture while enjoying premium quality fruits and vegetables.
                             </p>
                             <div className="hero-actions">
-                                <button className="btn btn-primary btn-lg" 
+                                <button className="btn btn-primary btn-lg"
                                         onClick={() => history.push('/products')}
                                 >
                                     <i className="fas fa-leaf"></i>
                                     Shop Fresh Produce
                                 </button>
                                 {!user && (
-                                    <button 
+                                    <button
                                         className="btn btn-secondary btn-lg"
                                         onClick={() => setShowSignUpModal(true)}
                                     >
@@ -85,7 +85,7 @@ function HomePage() {
                             </div>
                             <div className="hero-stats">
                                 <div className="stat">
-                                    <span className="stat-number">{products.length}+</span>
+                                    <span className="stat-number">{Object.values(products).length}+</span>
                                     <span className="stat-label">Fresh Products</span>
                                 </div>
                                 <div className="stat">
@@ -99,7 +99,7 @@ function HomePage() {
                             </div>
                         </div>
                         <div className="hero-image">
-                            <img 
+                            <img
                                 src="https://images.unsplash.com/photo-1542838132-92c53300491e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
                                 alt="Fresh vegetables and fruits"
                                 className="hero-img"
@@ -124,7 +124,7 @@ function HomePage() {
                             </div>
                             <h3 className="feature-title">100% Fresh & Local</h3>
                             <p className="feature-description">
-                                All produce is harvested fresh and sourced directly from local farms 
+                                All produce is harvested fresh and sourced directly from local farms
                                 in your area, ensuring maximum freshness and flavor.
                             </p>
                         </div>
@@ -134,7 +134,7 @@ function HomePage() {
                             </div>
                             <h3 className="feature-title">Direct from Farmers</h3>
                             <p className="feature-description">
-                                Skip the middleman and buy directly from farmers, ensuring fair 
+                                Skip the middleman and buy directly from farmers, ensuring fair
                                 prices and supporting your local agricultural community.
                             </p>
                         </div>
@@ -144,7 +144,7 @@ function HomePage() {
                             </div>
                             <h3 className="feature-title">Fast Delivery</h3>
                             <p className="feature-description">
-                                Get your fresh produce delivered right to your door within 24 hours 
+                                Get your fresh produce delivered right to your door within 24 hours
                                 of harvest for ultimate freshness.
                             </p>
                         </div>
@@ -154,7 +154,7 @@ function HomePage() {
                             </div>
                             <h3 className="feature-title">Sustainable Farming</h3>
                             <p className="feature-description">
-                                Support environmentally friendly farming practices that protect 
+                                Support environmentally friendly farming practices that protect
                                 our planet for future generations.
                             </p>
                         </div>
@@ -175,7 +175,7 @@ function HomePage() {
                     {/* Product Categories Filter (Future Feature) */}
                     <div className="product-filters">
                         {productTypes.map((type) => (
-                            <button 
+                            <button
                                 key={type}
                                 className={`filter-btn ${activeFilter === type ? 'filter-btn-active' : ''}`}
                                 onClick={() => handleFilterChange(type)}
@@ -209,8 +209,8 @@ function HomePage() {
                                 )}
                             </button>
                             {showAllProducts && (
-                                <button 
-                                    className="btn btn-secondary btn-lg" 
+                                <button
+                                    className="btn btn-secondary btn-lg"
                                     onClick={() => setShowAllProducts(false)}
                                     style={{ marginLeft: 'var(--space-4)' }}
                                 >
@@ -229,7 +229,7 @@ function HomePage() {
                     <div className="cta-content">
                         <h2 className="cta-title">Ready to Start Selling?</h2>
                         <p className="cta-subtitle">
-                            Join our community of local farmers and start selling your fresh produce today. 
+                            Join our community of local farmers and start selling your fresh produce today.
                             It's free to get started!
                         </p>
                         <div className="cta-actions">
@@ -241,7 +241,7 @@ function HomePage() {
                             ) : (
                                 <button className="btn btn-primary btn-xl" onClick={() => setShowSignUpModal(true)}>
                                     <i className="fas fa-store"></i>
-                                    
+
                                     Start Selling Today
                                 </button>
                             )}
