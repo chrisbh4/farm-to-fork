@@ -7,7 +7,6 @@ import './User.css';
 
 function User() {
   const [user, setUser] = useState({});
-  const [userProducts, setUserProducts] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const { userId } = useParams();
@@ -31,12 +30,7 @@ function User() {
           const userData = await userResponse.json();
           setUser(userData);
           
-          // Fetch user's products
-          const productsResponse = await fetch(`/api/users/${userId}/products`);
-          if (productsResponse.ok) {
-            const productsData = await productsResponse.json();
-            setUserProducts(productsData.products || []);
-          }
+
         } else {
           // User not found or error
           history.push('/');
