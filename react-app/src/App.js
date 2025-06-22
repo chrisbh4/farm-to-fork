@@ -14,6 +14,7 @@ import { authenticate } from './store/session';
 import ProductCreateForm from './components/Products/ProductCreateForm';
 import { fetchAllProducts } from './store/products';
 import AllProductsPage from './components/Products/AllProductsPage';
+import OrdersPage from './components/Orders/OrdersPage';
 
 function App() {
   const [loaded, setLoaded] = useState(false);
@@ -59,6 +60,9 @@ function App() {
         <Route path='/products/:id/edit' exact={true} >
           <ProductEditForm />
         </Route>
+        <ProtectedRoute path='/orders' exact={true} >
+          <OrdersPage />
+        </ProtectedRoute>
         <Route path='/' exact={true} >
           <HomePage />
         </Route>

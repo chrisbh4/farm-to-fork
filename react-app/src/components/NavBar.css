@@ -179,9 +179,9 @@
   padding: var(--space-2) var(--space-4);
   font-size: var(--text-sm);
   font-weight: 600;
-  color: var(--primary-600);
-  background-color: var(--primary-50);
-  border: 2px solid var(--primary-200);
+  color: var(--gray-600);
+  background-color: transparent;
+  border: 2px solid var(--gray-200);
   border-radius: var(--radius-lg);
   text-decoration: none;
   transition: all var(--transition-fast);
@@ -260,18 +260,19 @@
   padding: var(--space-2) var(--space-4);
   font-size: var(--text-sm);
   font-weight: 600;
-  color: white;
-  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-  border: none;
+  color: var(--gray-600);
+  background-color: transparent;
+  border: 2px solid transparent;
   border-radius: var(--radius-lg);
   cursor: pointer;
   transition: all var(--transition-fast);
   white-space: nowrap;
-  box-shadow: var(--shadow-sm);
 }
 
 .navbar-demo-btn:hover {
-  background: linear-gradient(135deg, #2563eb, #1e40af);
+  color: var(--primary-700);
+  background-color: var(--primary-100);
+  border-color: var(--primary-300);
   transform: translateY(-1px);
   box-shadow: var(--shadow-md);
 }
@@ -288,9 +289,9 @@
   padding: var(--space-2) var(--space-4);
   font-size: var(--text-sm);
   font-weight: 600;
-  color: var(--gray-700);
-  background-color: white;
-  border: 2px solid var(--gray-200);
+  color: var(--gray-600);
+  background-color: transparent;
+  border: 2px solid transparent;
   border-radius: var(--radius-lg);
   cursor: pointer;
   transition: all var(--transition-fast);
@@ -298,11 +299,11 @@
 }
 
 .navbar-login-btn:hover {
-  color: var(--gray-900);
-  background-color: var(--gray-50);
-  border-color: var(--gray-300);
+  color: var(--primary-700);
+  background-color: var(--primary-100);
+  border-color: var(--primary-300);
   transform: translateY(-1px);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-md);
 }
 
 /* Sign Up Button */
@@ -313,20 +314,19 @@
   padding: var(--space-2) var(--space-4);
   font-size: var(--text-sm);
   font-weight: 600;
-  color: white;
-  background-color: var(--primary-600);
-  border: 2px solid var(--primary-600);
+  color: var(--gray-600);
+  background-color: transparent;
+  border: 2px solid transparent;
   border-radius: var(--radius-lg);
   cursor: pointer;
   transition: all var(--transition-fast);
   white-space: nowrap;
-  box-shadow: var(--shadow-sm);
 }
 
 .navbar-signup-btn:hover {
-  color: white;
-  background-color: var(--primary-700);
-  border-color: var(--primary-700);
+  color: var(--primary-700);
+  background-color: var(--primary-100);
+  border-color: var(--primary-300);
   transform: translateY(-1px);
   box-shadow: var(--shadow-md);
 }
@@ -348,9 +348,9 @@
 }
 
 .navbar-user-menu:hover {
-  color: var(--gray-900);
-  background-color: white;
-  border-color: var(--gray-300);
+  color: var(--primary-700);
+  background-color: var(--primary-100);
+  border-color: var(--primary-300);
   box-shadow: var(--shadow-sm);
 }
 
@@ -378,6 +378,7 @@
 }
 
 .navbar-user-dropdown {
+  
   position: absolute;
   top: calc(100% + var(--space-2));
   right: 0;
@@ -389,6 +390,7 @@
   z-index: 2001;
   overflow: visible;
   pointer-events: auto;
+  
 }
 
 .navbar-user-dropdown-header {
