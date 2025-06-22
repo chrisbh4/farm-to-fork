@@ -151,7 +151,7 @@ function User() {
           </div>
 
           {/* Profile Stats */}
-          <div className="user-stats">
+          {/* <div className="user-stats">
             <div className="stat-card">
               <div className="stat-icon">
                 <i className="fas fa-leaf"></i>
@@ -161,27 +161,19 @@ function User() {
                 <p className="stat-label">Products Listed</p>
               </div>
             </div>
-            
-            <div className="stat-card">
-              <div className="stat-icon">
-                <i className="fas fa-star"></i>
-              </div>
-              <div className="stat-content">
-                <h3 className="stat-number">4.8</h3>
-                <p className="stat-label">Average Rating</p>
-              </div>
-            </div>
-            
+                        
             <div className="stat-card">
               <div className="stat-icon">
                 <i className="fas fa-calendar-alt"></i>
               </div>
               <div className="stat-content">
-                <h3 className="stat-number">{new Date().getFullYear()}</h3>
+                <h3 className="stat-number">
+                  {user.created_at ? new Date(user.created_at).getFullYear() : new Date().getFullYear()}
+                </h3>
                 <p className="stat-label">Member Since</p>
               </div>
             </div>
-          </div>
+          </div> */}
 
           {/* Profile Content */}
           <div className="user-profile-content">
