@@ -129,11 +129,44 @@ def product_page(id):
         form['csrf_token'].data = request.cookies['csrf_token']
         if form.validate_on_submit():
             new_data = form.data
+            
+            # Handle image upload
+            image_url = product.image  # Keep current image by default
+            if new_data['image']:
+                image = new_data['image']
+                if not allowed_file(image.filename):
+                    return {'errors': {'image': ['Invalid file type. Please upload an image file.']}}, 400
+                
+                # Remove old image from S3 if it exists
+                if product.image and product.image.startswith(S3_LOCATION):
+                    try:
+                        remove_file_from_s3(product.image, BUCKET_NAME)
+                    except Exception as e:
+                        print(f"Failed to remove old image: {e}")
+                
+                # Upload new image
+                try:
+                    if BUCKET_NAME:  # Only try S3 if bucket is configured
+                        image.filename = get_unique_filename(image.filename)
+                        upload_result = upload_file_to_s3(image, BUCKET_NAME)
+                        
+                        if isinstance(upload_result, str):  # Success case
+                            image_url = upload_result
+                        else:
+                            print(f"S3 upload failed: {upload_result}")
+                            return {'errors': {'image': ['Failed to upload image. Please try again.']}}, 500
+                    else:
+                        print("S3 not configured, skipping image upload")
+                        return {'errors': {'image': ['Image upload not configured.']}}, 500
+                except Exception as e:
+                    print(f"Image upload error: {e}")
+                    return {'errors': {'image': ['Failed to upload image. Please try again.']}}, 500
+            
             product.name = new_data['name']
             product.description = new_data['description']
             product.price = new_data['price']
             product.quantity = new_data['quantity']
-            product.image = new_data['image']
+            product.image = image_url
             product.product_type = new_data['product_type']
             product.updated_at = datetime.now()
 
@@ -141,7 +174,7 @@ def product_page(id):
             db.session.commit()
             return product.to_dict()
         else:
-            return {'errors':form.errors},500
+            return {'errors':form.errors},400
 
     elif request.method == 'DELETE':
         db.session.delete(product)
