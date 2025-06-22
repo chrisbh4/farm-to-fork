@@ -2,6 +2,7 @@ import { useSelector, useDispatch } from "react-redux"
 import { useResetCartItems } from "../../store/shoppingCart"
 import { createOrder } from "../../store"
 import CartItem from "./CartItem"
+import PurchaseCompleteModal from "./PurchaseCompleteModal"
 import "./Cart.css"
 import { useEffect, useState } from "react"
 
@@ -10,6 +11,8 @@ const ShoppingCart = () => {
    const [isProcessing, setIsProcessing] = useState(false)
    const [orderSuccess, setOrderSuccess] = useState(false)
    const [orderError, setOrderError] = useState('')
+   const [showPurchaseModal, setShowPurchaseModal] = useState(false)
+   const [completedOrder, setCompletedOrder] = useState(null)
 
    const dispatch = useDispatch()
    const cartObject = useSelector(state => state.shoppingCart)
@@ -38,16 +41,14 @@ const ShoppingCart = () => {
       
       try {
          // Create order with cart items
-         await dispatch(createOrder(itemList))
+         const order = await dispatch(createOrder(itemList))
          
-         // Clear cart and show success
+         // Clear cart
          resetCart()
-         setOrderSuccess(true)
          
-         // Hide success message after 3 seconds
-         setTimeout(() => {
-            setOrderSuccess(false)
-         }, 3000)
+         // Show purchase complete modal
+         setCompletedOrder(order)
+         setShowPurchaseModal(true)
          
       } catch (error) {
          setOrderError(error.message || 'Failed to create order. Please try again.')
@@ -56,63 +57,43 @@ const ShoppingCart = () => {
       }
    }
 
-   const itemCount = itemList.reduce((count, item) => count + item.quantity, 0)
-
-   // Empty cart state
-   if (itemList.length === 0) {
-      return (
-         <div className="cart-container">
-            <div className="cart-empty">
-               <div className="cart-empty-icon">
-                  <i className="fas fa-shopping-cart"></i>
-               </div>
-               <h3 className="cart-empty-title">Your cart is empty</h3>
-               <p className="cart-empty-subtitle">
-                  Add some fresh produce to get started!
-               </p>
-               <div className="cart-empty-features">
-                  <div className="cart-feature">
-                     <i className="fas fa-leaf"></i>
-                     <span>Fresh & Local</span>
-                  </div>
-                  <div className="cart-feature">
-                     <i className="fas fa-truck"></i>
-                     <span>Fast Delivery</span>
-                  </div>
-                  <div className="cart-feature">
-                     <i className="fas fa-handshake"></i>
-                     <span>Support Farmers</span>
-                  </div>
-               </div>
-            </div>
-         </div>
-      )
+   const handleClosePurchaseModal = () => {
+      setShowPurchaseModal(false)
+      setCompletedOrder(null)
    }
 
-   return (
-      <div className="cart-container">
-         {/* Success Message */}
-         {orderSuccess && (
-            <div className="cart-success-message">
-               <i className="fas fa-check-circle"></i>
-               <span>Order placed successfully! Thank you for your purchase.</span>
-            </div>
-         )}
+   const itemCount = itemList.reduce((count, item) => count + item.quantity, 0)
 
-         {/* Error Message */}
-         {orderError && (
-            <div className="cart-error-message">
-               <i className="fas fa-exclamation-triangle"></i>
-               <span>{orderError}</span>
-               <button 
-                  className="error-close-btn"
-                  onClick={() => setOrderError('')}
-               >
-                  ×
-               </button>
+   // Empty cart content
+   const renderEmptyCart = () => (
+      <div className="cart-empty">
+         <div className="cart-empty-icon">
+            <i className="fas fa-shopping-cart"></i>
+         </div>
+         <h3 className="cart-empty-title">Your cart is empty</h3>
+         <p className="cart-empty-subtitle">
+            Add some fresh produce to get started!
+         </p>
+         <div className="cart-empty-features">
+            <div className="cart-feature">
+               <i className="fas fa-leaf"></i>
+               <span>Fresh & Local</span>
             </div>
-         )}
+            <div className="cart-feature">
+               <i className="fas fa-truck"></i>
+               <span>Fast Delivery</span>
+            </div>
+            <div className="cart-feature">
+               <i className="fas fa-handshake"></i>
+               <span>Support Farmers</span>
+            </div>
+         </div>
+      </div>
+   )
 
+   // Cart with items content
+   const renderCartWithItems = () => (
+      <>
          {/* Cart Header */}
          <div className="cart-summary">
             <div className="cart-summary-info">
@@ -174,7 +155,37 @@ const ShoppingCart = () => {
                </p>
             </div>
          </div>
-      </div>
+      </>
+   )
+
+   return (
+      <>
+         <div className="cart-container">
+            {/* Error Message */}
+            {orderError && (
+               <div className="cart-error-message">
+                  <i className="fas fa-exclamation-triangle"></i>
+                  <span>{orderError}</span>
+                  <button 
+                     className="error-close-btn"
+                     onClick={() => setOrderError('')}
+                  >
+                     ×
+                  </button>
+               </div>
+            )}
+
+            {/* Render cart content based on whether cart has items */}
+            {itemList.length === 0 ? renderEmptyCart() : renderCartWithItems()}
+         </div>
+
+         {/* Purchase Complete Modal - Always rendered outside cart container */}
+         <PurchaseCompleteModal 
+            isOpen={showPurchaseModal}
+            onClose={handleClosePurchaseModal}
+            order={completedOrder}
+         />
+      </>
    )
 }
 
