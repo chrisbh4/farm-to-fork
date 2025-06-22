@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchCreateProduct } from '../../store/products';
 import { useHistory } from 'react-router-dom';
@@ -19,6 +19,14 @@ const ProductCreateForm = () => {
   const user_id = user.id;
   const history = useHistory();
   const dispatch = useDispatch();
+  const isMountedRef = useRef(true);
+
+  // Cleanup function to prevent state updates on unmounted component
+  useEffect(() => {
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
 
   const PRODUCT_TYPES = [
     { value: 'Vegetables', label: 'Vegetables' },
@@ -29,9 +37,11 @@ const ProductCreateForm = () => {
   // Handle file upload
   const handleFileChange = (e) => {
     const file = e.target.files[0];
+    
     if (file) {
       // Validate file type
       const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+      
       if (!validTypes.includes(file.type)) {
         setErrors(prev => ({ ...prev, image: 'Please select a valid image file (JPEG, PNG, GIF, or WebP)' }));
         return;
@@ -43,16 +53,48 @@ const ProductCreateForm = () => {
         return;
       }
 
+      // Clear previous preview (no cleanup needed for data URLs)
+
       setImageFile(file);
       setErrors(prev => ({ ...prev, image: '' }));
 
-      // Create preview
+      // Create preview using FileReader
       const reader = new FileReader();
-      reader.onload = (e) => {
-        setImagePreview(e.target.result);
+      
+      reader.onload = (event) => {
+        // Only update state if component is still mounted
+        if (!isMountedRef.current) return;
+        
+        const result = event.target.result;
+        
+        // Validate the data URL
+        if (result && result.startsWith('data:image/')) {
+          setImagePreview(result);
+        } else {
+          setErrors(prev => ({ ...prev, image: 'Invalid image format' }));
+        }
       };
-      reader.readAsDataURL(file);
-    }
+      
+      reader.onerror = () => {
+        // Only update state if component is still mounted
+        if (!isMountedRef.current) return;
+        
+        setErrors(prev => ({ ...prev, image: 'Failed to read file' }));
+      };
+      
+      try {
+        reader.readAsDataURL(file);
+      } catch (error) {
+        // Only update state if component is still mounted
+        if (isMountedRef.current) {
+          setErrors(prev => ({ ...prev, image: 'Failed to process file' }));
+        }
+      }
+          } else {
+        // Clear preview if no file selected
+        setImageFile(null);
+        setImagePreview('');
+      }
   };
 
   const onSubmit = async (e) => {
@@ -319,7 +361,17 @@ const ProductCreateForm = () => {
                 <img 
                   src={imagePreview} 
                   alt="Product preview" 
-                  className="image-preview-img"
+                  style={{
+                    maxWidth: '200px',
+                    maxHeight: '200px',
+                    objectFit: 'cover',
+                    borderRadius: '8px',
+                    marginBottom: '12px',
+                    display: 'block'
+                  }}
+                  onError={() => {
+                    setErrors(prev => ({ ...prev, image: 'Failed to display image preview' }));
+                  }}
                 />
                 <button
                   type="button"
