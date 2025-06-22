@@ -8,6 +8,81 @@
   background-color: white;
 }
 
+/* Success and Error Messages */
+.cart-success-message {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  margin: var(--space-4);
+  margin-bottom: 0;
+  background-color: #d4edda;
+  border: 1px solid #c3e6cb;
+  border-radius: var(--radius-lg);
+  color: #155724;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  animation: slideDown 0.3s ease-out;
+}
+
+.cart-success-message i {
+  font-size: var(--text-lg);
+  color: #28a745;
+}
+
+.cart-error-message {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  margin: var(--space-4);
+  margin-bottom: 0;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: var(--radius-lg);
+  color: #721c24;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  animation: slideDown 0.3s ease-out;
+}
+
+.cart-error-message i {
+  font-size: var(--text-lg);
+  color: #dc3545;
+}
+
+.error-close-btn {
+  margin-left: auto;
+  background: none;
+  border: none;
+  font-size: var(--text-xl);
+  color: #721c24;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  transition: background-color var(--transition-base);
+}
+
+.error-close-btn:hover {
+  background-color: rgba(114, 28, 36, 0.1);
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* Empty Cart State */
 .cart-empty {
   display: flex;

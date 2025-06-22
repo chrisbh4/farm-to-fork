@@ -148,18 +148,22 @@ const NavBar = () => {
                         <Link
                           to="/products/create"
                           className="navbar-user-dropdown-item"
-                          // onClick={() => setShowUserDropdown(false)}
+                          onClick={() => setShowUserDropdown(false)}
                         >
                           <i className="fas fa-plus"></i>
                           Create Listing
                         </Link>
+                        <Link
+                          to="/orders"
+                          className="navbar-user-dropdown-item"
+                          onClick={() => setShowUserDropdown(false)}
+                        >
+                          <i className="fas fa-history"></i>
+                          My Orders
+                        </Link>
                         {/* <div className="navbar-user-dropdown-item navbar-user-dropdown-item-disabled">
                           <i className="fas fa-heart"></i>
                           Favorites (Soon)
-                        </div>
-                        <div className="navbar-user-dropdown-item navbar-user-dropdown-item-disabled">
-                          <i className="fas fa-history"></i>
-                          Order History (Soon)
                         </div> */}
                       </div>
 
@@ -260,10 +264,16 @@ const NavBar = () => {
                     Create New Listing
                   </Link>
 
-                  <div className="sidebar-menu-item">
+                  <Link
+                    to="/orders"
+                    className="sidebar-menu-item"
+                    onClick={() => {
+                      setOptionsOn(false);
+                    }}
+                  >
                     <i className="fas fa-history"></i>
-                    Order History (Coming Soon)
-                  </div>
+                    My Orders
+                  </Link>
                 </div>
 
                 <div className="sidebar-footer">

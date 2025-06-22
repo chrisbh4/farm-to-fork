@@ -1,5 +1,6 @@
-import { useSelector } from "react-redux"
+import { useSelector, useDispatch } from "react-redux"
 import { useResetCartItems } from "../../store/shoppingCart"
+import { createOrder } from "../../store"
 import CartItem from "./CartItem"
 import "./Cart.css"
 import { useEffect, useState } from "react"
@@ -7,8 +8,12 @@ import { useEffect, useState } from "react"
 const ShoppingCart = () => {
    const [total, setTotal] = useState(0)
    const [isProcessing, setIsProcessing] = useState(false)
+   const [orderSuccess, setOrderSuccess] = useState(false)
+   const [orderError, setOrderError] = useState('')
 
+   const dispatch = useDispatch()
    const cartObject = useSelector(state => state.shoppingCart)
+   const user = useSelector(state => state.session.user)
    const itemList = Object.values(cartObject)
    const resetCart = useResetCartItems()
 
@@ -22,13 +27,33 @@ const ShoppingCart = () => {
    }, [itemList])
 
    const handlePurchase = async () => {
+      if (!user) {
+         setOrderError('Please log in to complete your purchase')
+         return
+      }
+
       setIsProcessing(true)
+      setOrderError('')
+      setOrderSuccess(false)
       
-      // Simulate processing time
-      setTimeout(() => {
+      try {
+         // Create order with cart items
+         await dispatch(createOrder(itemList))
+         
+         // Clear cart and show success
          resetCart()
+         setOrderSuccess(true)
+         
+         // Hide success message after 3 seconds
+         setTimeout(() => {
+            setOrderSuccess(false)
+         }, 3000)
+         
+      } catch (error) {
+         setOrderError(error.message || 'Failed to create order. Please try again.')
+      } finally {
          setIsProcessing(false)
-      }, 1500)
+      }
    }
 
    const itemCount = itemList.reduce((count, item) => count + item.quantity, 0)
@@ -66,6 +91,28 @@ const ShoppingCart = () => {
 
    return (
       <div className="cart-container">
+         {/* Success Message */}
+         {orderSuccess && (
+            <div className="cart-success-message">
+               <i className="fas fa-check-circle"></i>
+               <span>Order placed successfully! Thank you for your purchase.</span>
+            </div>
+         )}
+
+         {/* Error Message */}
+         {orderError && (
+            <div className="cart-error-message">
+               <i className="fas fa-exclamation-triangle"></i>
+               <span>{orderError}</span>
+               <button 
+                  className="error-close-btn"
+                  onClick={() => setOrderError('')}
+               >
+                  ×
+               </button>
+            </div>
+         )}
+
          {/* Cart Header */}
          <div className="cart-summary">
             <div className="cart-summary-info">
