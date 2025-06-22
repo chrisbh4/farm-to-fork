@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, DecimalField, TextAreaField, IntegerField, TextField, SelectField
+from flask_wtf.file import FileField, FileAllowed
+from wtforms import StringField, DecimalField, TextAreaField, IntegerField, SelectField
 from wtforms.validators import DataRequired, Length, NumberRange, ValidationError
 from app.models import Product
 
@@ -20,9 +21,9 @@ PRODUCT_TYPES = [
 
 class ProductEditForm(FlaskForm):
     product_id = IntegerField("product_id")
-    name = StringField('Name', validators=[DataRequired(), Length(min=2, max=50, message="Name must be between %(min)d and %(max)d characters."), check_name_on_edit])
-    description = TextAreaField('Description', validators=[DataRequired(), Length(min=2, max=255, message="Description must be between %(min)d and %(max)d characters.")])
-    price = DecimalField('Price', validators=[DataRequired(), NumberRange(min=0.01 ,max=99999999.99, message="Price must be between $%(min)d and $%(max)d.")])
-    quantity = IntegerField('Quantity',validators=[DataRequired(), NumberRange(min=1, message="Quantity must be at least %(min)d.")])
-    image = TextField("Image")
+    name = StringField('Name', validators=[DataRequired(), Length(min=2, max=100, message="Name must be between %(min)d and %(max)d characters."), check_name_on_edit])
+    description = TextAreaField('Description', validators=[DataRequired(), Length(min=10, max=500, message="Description must be between %(min)d and %(max)d characters.")])
+    price = DecimalField('Price', validators=[DataRequired(), NumberRange(min=0.01, max=10000.00, message="Price must be between $%(min).2f and $%(max).2f.")])
+    quantity = IntegerField('Quantity', validators=[DataRequired(), NumberRange(min=1, message="Quantity must be at least %(min)d.")])
+    image = FileField("Image", validators=[FileAllowed(['jpg', 'jpeg', 'png', 'gif', 'webp'], 'Only image files are allowed!')])
     product_type = SelectField('Product Type', choices=PRODUCT_TYPES, validators=[DataRequired()])

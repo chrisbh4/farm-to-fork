@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, DecimalField, TextAreaField, IntegerField, TextField, SelectField
-from wtforms.validators import DataRequired, Length, NumberRange, ValidationError
+from flask_wtf.file import FileField, FileAllowed
+from wtforms import StringField, DecimalField, TextAreaField, IntegerField, SelectField
+from wtforms.validators import DataRequired, Length, NumberRange, ValidationError, Optional
 from app.models import Product
 
 def check_name_on_create(form, field):
@@ -18,9 +19,9 @@ PRODUCT_TYPES = [
 
 class ProductCreateForm(FlaskForm):
     user_id = IntegerField()
-    name= StringField('Name', validators=[DataRequired(), Length(min=2, max=50, message="Name must be between %(min)d and %(max)d characters."), check_name_on_create])
-    description = TextAreaField('Description', validators=[DataRequired(), Length(min=2, max=255, message="Description must be between %(min)d and %(max)d characters.")])
-    price= DecimalField('Price', validators=[DataRequired(), NumberRange(min=0.01 ,max=99999999.99, message="Price must be between $%(min)d and $%(max)d.")])
+    name= StringField('Name', validators=[DataRequired(), Length(min=2, max=100, message="Name must be between %(min)d and %(max)d characters."), check_name_on_create])
+    description = TextAreaField('Description', validators=[DataRequired(), Length(min=10, max=500, message="Description must be between %(min)d and %(max)d characters.")])
+    price= DecimalField('Price', validators=[DataRequired(), NumberRange(min=0.01 ,max=10000.00, message="Price must be between $%(min).2f and $%(max).2f.")])
     quantity = IntegerField('Quantity',validators=[DataRequired(), NumberRange(min=1, message="Quantity must be at least %(min)d.")])
-    image = TextField("Image")
+    image = FileField("Image", validators=[Optional(), FileAllowed(['jpg', 'jpeg', 'png', 'gif', 'webp'], 'Images only!')])
     product_type = SelectField('Product Type', choices=PRODUCT_TYPES, validators=[DataRequired()])

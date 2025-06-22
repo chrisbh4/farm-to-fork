@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchCreateProduct } from '../../store/products';
 import { useHistory } from 'react-router-dom';
@@ -10,7 +10,8 @@ const ProductCreateForm = () => {
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
   const [quantity] = useState(1);
-  const [image, setImage] = useState('');
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState('');
   const [productType, setProductType] = useState('Vegetables');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -18,6 +19,14 @@ const ProductCreateForm = () => {
   const user_id = user.id;
   const history = useHistory();
   const dispatch = useDispatch();
+  const isMountedRef = useRef(true);
+
+  // Cleanup function to prevent state updates on unmounted component
+  useEffect(() => {
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
 
   const PRODUCT_TYPES = [
     { value: 'Vegetables', label: 'Vegetables' },
@@ -25,24 +34,118 @@ const ProductCreateForm = () => {
     { value: 'Herbs', label: 'Herbs' }
   ];
 
+  // Handle file upload
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    
+    if (file) {
+      // Validate file type
+      const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+      
+      if (!validTypes.includes(file.type)) {
+        setErrors(prev => ({ ...prev, image: 'Please select a valid image file (JPEG, PNG, GIF, or WebP)' }));
+        return;
+      }
+
+      // Validate file size (5MB max)
+      if (file.size > 5 * 1024 * 1024) {
+        setErrors(prev => ({ ...prev, image: 'Image file must be less than 5MB' }));
+        return;
+      }
+
+      // Clear previous preview (no cleanup needed for data URLs)
+
+      setImageFile(file);
+      setErrors(prev => ({ ...prev, image: '' }));
+
+      // Create preview using FileReader
+      const reader = new FileReader();
+      
+      reader.onload = (event) => {
+        // Only update state if component is still mounted
+        if (!isMountedRef.current) return;
+        
+        const result = event.target.result;
+        
+        // Validate the data URL
+        if (result && result.startsWith('data:image/')) {
+          setImagePreview(result);
+        } else {
+          setErrors(prev => ({ ...prev, image: 'Invalid image format' }));
+        }
+      };
+      
+      reader.onerror = () => {
+        // Only update state if component is still mounted
+        if (!isMountedRef.current) return;
+        
+        setErrors(prev => ({ ...prev, image: 'Failed to read file' }));
+      };
+      
+      try {
+        reader.readAsDataURL(file);
+      } catch (error) {
+        // Only update state if component is still mounted
+        if (isMountedRef.current) {
+          setErrors(prev => ({ ...prev, image: 'Failed to process file' }));
+        }
+      }
+          } else {
+        // Clear preview if no file selected
+        setImageFile(null);
+        setImagePreview('');
+      }
+  };
+
   const onSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setErrors({});
 
-    // Client-side validation
+    // Enhanced client-side validation
     const newErrors = {};
     
-    if (!name.trim()) newErrors.name = 'Product name is required';
-    if (name.length > 100) newErrors.name = 'Product name must be less than 100 characters';
+    // Name validation
+    if (!name.trim()) {
+      newErrors.name = 'Product name is required';
+    } else if (name.trim().length < 2) {
+      newErrors.name = 'Product name must be at least 2 characters';
+    } else if (name.length > 100) {
+      newErrors.name = 'Product name must be less than 100 characters';
+    }
     
-    if (!description.trim()) newErrors.description = 'Description is required';
-    if (description.length < 10) newErrors.description = 'Description must be at least 10 characters';
+    // Description validation
+    if (!description.trim()) {
+      newErrors.description = 'Description is required';
+    } else if (description.trim().length < 10) {
+      newErrors.description = 'Description must be at least 10 characters';
+    } else if (description.length > 500) {
+      newErrors.description = 'Description must be less than 500 characters';
+    }
     
-    if (!price || price <= 0) newErrors.price = 'Price must be greater than 0';
-    if (price > 10000) newErrors.price = 'Price must be less than $10,000';
+    // Price validation
+    if (!price) {
+      newErrors.price = 'Price is required';
+    } else {
+      const priceNum = parseFloat(price);
+      if (isNaN(priceNum) || priceNum <= 0) {
+        newErrors.price = 'Price must be a valid number greater than 0';
+      } else if (priceNum > 10000) {
+        newErrors.price = 'Price must be less than $10,000';
+      } else if (priceNum < 0.01) {
+        newErrors.price = 'Price must be at least $0.01';
+      }
+    }
 
-    if (!productType) newErrors.productType = 'Product type is required';
+    // Product type validation
+    if (!productType) {
+      newErrors.productType = 'Product type is required';
+    }
+
+    // Image validation (optional but if provided, must be valid)
+    if (imageFile && !['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'].includes(imageFile.type)) {
+      newErrors.image = 'Please select a valid image file';
+    }
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -51,7 +154,20 @@ const ProductCreateForm = () => {
     }
 
     try {
-      const data = await dispatch(fetchCreateProduct(user_id, name, description, parseFloat(price), quantity, image, productType));
+      // Create FormData for file upload
+      const formData = new FormData();
+      formData.append('user_id', user_id);
+      formData.append('name', name.trim());
+      formData.append('description', description.trim());
+      formData.append('price', parseFloat(price));
+      formData.append('quantity', quantity);
+      formData.append('product_type', productType);
+      
+      if (imageFile) {
+        formData.append('image', imageFile);
+      }
+
+      const data = await dispatch(fetchCreateProduct(formData));
 
       if (data) {
         if (!data.errors) {
@@ -212,39 +328,65 @@ const ProductCreateForm = () => {
             )}
           </div>
 
-          {/* Image URL */}
+          {/* Image Upload */}
           <div className="form-group">
             <label htmlFor="image" className="form-label">
-              Product Image URL
+              Product Image
             </label>
             <div className="form-input-container">
               <i className="fas fa-image form-input-icon"></i>
               <input
                 id="image"
-                type="url"
-                className="form-input"
-                placeholder="https://example.com/your-product-image.jpg"
-                value={image}
-                onChange={(e) => setImage(e.target.value)}
+                type="file"
+                accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
+                className={`form-input ${errors.image ? 'form-input-error' : ''}`}
+                onChange={handleFileChange}
                 disabled={isLoading}
               />
             </div>
+            {errors.image && (
+              <p className="form-error">
+                <i className="fas fa-exclamation-circle"></i>
+                {errors.image}
+              </p>
+            )}
             <p className="form-help-text">
-              Optional: Add a URL to showcase your product (recommended for better sales)
+              Optional: Upload an image to showcase your product (JPEG, PNG, GIF, or WebP, max 5MB)
             </p>
             
             {/* Image Preview */}
-            {image && (
+            {imagePreview && (
               <div className="image-preview">
                 <p className="image-preview-label">Preview:</p>
                 <img 
-                  src={image} 
+                  src={imagePreview} 
                   alt="Product preview" 
-                  className="image-preview-img"
-                  onError={(e) => {
-                    e.target.style.display = 'none';
+                  style={{
+                    maxWidth: '200px',
+                    maxHeight: '200px',
+                    objectFit: 'cover',
+                    borderRadius: '8px',
+                    marginBottom: '12px',
+                    display: 'block'
+                  }}
+                  onError={() => {
+                    setErrors(prev => ({ ...prev, image: 'Failed to display image preview' }));
                   }}
                 />
+                <button
+                  type="button"
+                  className="image-remove-btn"
+                  onClick={() => {
+                    setImageFile(null);
+                    setImagePreview('');
+                    setErrors(prev => ({ ...prev, image: '' }));
+                    document.getElementById('image').value = '';
+                  }}
+                  disabled={isLoading}
+                >
+                  <i className="fas fa-times"></i>
+                  Remove Image
+                </button>
               </div>
             )}
           </div>

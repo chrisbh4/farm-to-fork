@@ -36,20 +36,10 @@ export const fetchAllProducts = () => async (dispatch) => {
     }
 }
 
-export const fetchCreateProduct = (user_id, name, description, price, quantity, image, product_type) => async (dispatch) => {
-
+export const fetchCreateProduct = (formData) => async (dispatch) => {
     const response = await fetch('/api/products/create', {
         method: "POST",
-        headers: { 'Content-Type': "application/json" },
-        body: JSON.stringify({
-            user_id,
-            name,
-            description,
-            price,
-            quantity,
-            image,
-            product_type
-        })
+        body: formData  // FormData handles the Content-Type header automatically
     })
 
     const data = await response.json()
@@ -62,19 +52,10 @@ export const fetchCreateProduct = (user_id, name, description, price, quantity, 
     }
 }
 
-export const fetchEditProduct = (id, name, description, price, quantity, image, product_type) => async (dispatch) => {
+export const fetchEditProduct = (id, formData) => async (dispatch) => {
     const response = await fetch(`/api/products/${id}`, {
         method: "PUT",
-        headers: { 'Content-Type': "application/json" },
-        body: JSON.stringify({
-            product_id: id,
-            name,
-            description,
-            price,
-            quantity,
-            image,
-            product_type
-        })
+        body: formData  // FormData handles the Content-Type header automatically
     })
     const data = await response.json()
     if (response.ok) {
@@ -84,7 +65,6 @@ export const fetchEditProduct = (id, name, description, price, quantity, image, 
     if (data.errors) {
         return data
     }
-
 }
 
 export const fetchDeleteProduct = (id) => async (dispatch) => {

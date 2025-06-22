@@ -51,7 +51,13 @@ const ProductModal = ({ product, userId, setEditMode, setShowProductModal }) => 
           <Link 
             to={`/products/${product.id}/edit`}
             className="product-modal-edit-btn"
-            onClick={() => setEditMode(true)}
+            onClick={() => {
+              // Only call setEditMode if it's provided (for ProductPage usage)
+              if (setEditMode && typeof setEditMode === 'function') {
+                setEditMode(true);
+              }
+              // If setEditMode is not provided, the Link will handle navigation normally
+            }}
           >
             <i className="fas fa-edit"></i>
             Edit Product
