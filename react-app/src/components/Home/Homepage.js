@@ -116,7 +116,7 @@ function HomePage() {
             {/* Features Section */}
             <section className="features-section">
                 <div className="container">
-                    <h2 className="section-title">Why Choose SpudHub?</h2>
+                    <h2 className="section-title">Why Choose Farm to Fork?</h2>
                     <div className="features-grid">
                         <div className="feature-card">
                             <div className="feature-icon">

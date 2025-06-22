@@ -288,7 +288,7 @@ const NavBar = () => {
             ) : (
               <div className="sidebar-guest-section">
                 <div className="sidebar-guest-message">
-                  <h4>Join SpudHub Today!</h4>
+                  <h4>Join Farm to Fork Today!</h4>
                   <p>Connect directly with local farmers and discover the freshest produce in your area.</p>
                 </div>
 
