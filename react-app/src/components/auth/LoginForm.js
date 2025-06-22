@@ -128,7 +128,7 @@ const LoginForm = ({ onClose }) => {
             ) : (
               <>
                 <i className="fas fa-sign-in-alt"></i>
-                Sign In
+                Log In
               </>
             )}
           </button>
