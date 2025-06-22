@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchUserOrders } from '../../store';
 import OrderCard from './OrderCard';
@@ -13,13 +13,7 @@ const OrdersPage = () => {
 
     const orders = Object.values(ordersState.orders || {});
 
-    useEffect(() => {
-        if (user) {
-            loadOrders();
-        }
-    }, [user]);
-
-    const loadOrders = async () => {
+    const loadOrders = useCallback(async () => {
         try {
             setIsLoading(true);
             setError('');
@@ -29,7 +23,13 @@ const OrdersPage = () => {
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [dispatch]);
+
+    useEffect(() => {
+        if (user) {
+            loadOrders();
+        }
+    }, [user, loadOrders]);
 
     if (!user) {
         return (

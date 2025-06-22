@@ -7,8 +7,6 @@ import ProductModal from './ProductModal';
 import '../Home/Homepage.css';
 
 function AllProductsPage() {
-    const [filters, setFilters] = useState({});
-    const [size, setSize] = useState(null);
     const [activeFilter, setActiveFilter] = useState('All Products');
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedProduct, setSelectedProduct] = useState(null);
@@ -16,12 +14,7 @@ function AllProductsPage() {
     const location = useLocation();
     const history = useHistory();
 
-    // Check if filters.size exists and set size value
-    useEffect(() => {
-        if (filters.size) {
-            setSize(filters.size);
-        }
-    }, [filters]);
+
 
     // Handle URL search parameters
     useEffect(() => {

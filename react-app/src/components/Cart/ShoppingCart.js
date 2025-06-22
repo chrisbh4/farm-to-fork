@@ -9,7 +9,6 @@ import { useEffect, useState } from "react"
 const ShoppingCart = () => {
    const [total, setTotal] = useState(0)
    const [isProcessing, setIsProcessing] = useState(false)
-   const [orderSuccess, setOrderSuccess] = useState(false)
    const [orderError, setOrderError] = useState('')
    const [showPurchaseModal, setShowPurchaseModal] = useState(false)
    const [completedOrder, setCompletedOrder] = useState(null)
@@ -37,7 +36,6 @@ const ShoppingCart = () => {
 
       setIsProcessing(true)
       setOrderError('')
-      setOrderSuccess(false)
       
       try {
          // Create order with cart items
