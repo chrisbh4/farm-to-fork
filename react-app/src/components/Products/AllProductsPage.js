@@ -1,7 +1,9 @@
 import { useSelector } from 'react-redux'
 import { useState, useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useHistory } from 'react-router-dom'
 import ProductList from '../Home/ProductList';
+import { Modal } from '../../context/Modal';
+import ProductModal from './ProductModal';
 import '../Home/Homepage.css';
 
 function AllProductsPage() {
@@ -9,7 +11,10 @@ function AllProductsPage() {
     const [size, setSize] = useState(null);
     const [activeFilter, setActiveFilter] = useState('All Products');
     const [searchQuery, setSearchQuery] = useState('');
+    const [selectedProduct, setSelectedProduct] = useState(null);
+    const [showProductModal, setShowProductModal] = useState(false);
     const location = useLocation();
+    const history = useHistory();
 
     // Check if filters.size exists and set size value
     useEffect(() => {
@@ -29,6 +34,30 @@ function AllProductsPage() {
             setSearchQuery('');
         }
     }, [location.search]);
+
+    const products = Object.values(useSelector((state) => state.products)).sort(sortProductsByName);
+    const user = useSelector(state => state.session.user);
+
+    // Handle opening modal from URL parameter (for edit form redirect)
+    useEffect(() => {
+        const urlParams = new URLSearchParams(location.search);
+        const openModalProductId = urlParams.get('openModal');
+        
+        if (openModalProductId && products.length > 0) {
+            const product = products.find(p => p.id === parseInt(openModalProductId));
+            if (product) {
+                setSelectedProduct(product);
+                setShowProductModal(true);
+                
+                // Clean up URL parameter without causing a re-render
+                const newParams = new URLSearchParams(location.search);
+                newParams.delete('openModal');
+                const newSearch = newParams.toString();
+                const newUrl = newSearch ? `${location.pathname}?${newSearch}` : location.pathname;
+                history.replace(newUrl);
+            }
+        }
+    }, [location.search, products, history, location.pathname]);
     
     function sortProductsByName(productA, productB) {
         let nameA = productA.name.toUpperCase(); 
@@ -41,9 +70,6 @@ function AllProductsPage() {
         }
         return 0;
     }
-
-    const products = Object.values(useSelector((state) => state.products)).sort(sortProductsByName);
-    const user = useSelector(state => state.session.user);
 
     // Get unique product types from the products data
     const productTypes = ['All Products', ...new Set(products.map(product => product.product_type))];
@@ -171,6 +197,20 @@ function AllProductsPage() {
                     )}
                 </div>
             </section>
+
+            {/* Product Modal */}
+            {showProductModal && selectedProduct && (
+                <Modal onClose={() => {
+                    setShowProductModal(false);
+                    setSelectedProduct(null);
+                }}>
+                    <ProductModal 
+                        product={selectedProduct}
+                        userId={user?.id}
+                        setShowProductModal={setShowProductModal}
+                    />
+                </Modal>
+            )}
         </div>
     )
 }

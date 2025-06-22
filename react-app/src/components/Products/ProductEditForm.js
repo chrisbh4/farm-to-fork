@@ -67,7 +67,7 @@ const ProductEditForm = () => {
       
       if (data) {
         if (!data.errors) {
-          history.push('/products');
+          history.push(`/products?openModal=${product.id}`);
         } else {
           setErrors(data.errors);
         }
