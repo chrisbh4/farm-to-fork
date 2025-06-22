@@ -85,7 +85,7 @@ function HomePage() {
                             </div>
                             <div className="hero-stats">
                                 <div className="stat">
-                                    <span className="stat-number">{products.length}+</span>
+                                    <span className="stat-number">{Object.values(products).length}+</span>
                                     <span className="stat-label">Fresh Products</span>
                                 </div>
                                 <div className="stat">
