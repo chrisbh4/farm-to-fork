@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { Modal } from '../context/Modal';
+import ProductModal from './Products/ProductModal';
 import './UserProductsList.css';
 
 const UserProductsList = ({ userId }) => {
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [showProductModal, setShowProductModal] = useState(false);
   const currentUser = useSelector(state => state.session.user);
   
   // Check if current user can manage these products
@@ -109,14 +113,32 @@ const UserProductsList = ({ userId }) => {
             key={product.id} 
             product={product} 
             canManage={canManage}
+            onViewDetails={(product) => {
+              setSelectedProduct(product);
+              setShowProductModal(true);
+            }}
           />
         ))}
       </div>
+
+      {/* Product Modal */}
+      {showProductModal && selectedProduct && (
+        <Modal onClose={() => {
+          setShowProductModal(false);
+          setSelectedProduct(null);
+        }}>
+          <ProductModal 
+            product={selectedProduct}
+            userId={currentUser?.id}
+            setShowProductModal={setShowProductModal}
+          />
+        </Modal>
+      )}
     </div>
   );
 };
 
-const UserProductCard = ({ product, canManage }) => {
+const UserProductCard = ({ product, canManage, onViewDetails }) => {
   const formatPrice = (price) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
@@ -156,13 +178,13 @@ const UserProductCard = ({ product, canManage }) => {
             >
               <i className="fas fa-edit"></i>
             </Link>
-            <Link 
-              to={`/products/${product.id}`}
+            <button 
               className="action-btn view-btn"
               title="View Details"
+              onClick={() => onViewDetails(product)}
             >
               <i className="fas fa-eye"></i>
-            </Link>
+            </button>
           </div>
         )}
       </div>
@@ -170,9 +192,12 @@ const UserProductCard = ({ product, canManage }) => {
       <div className="product-content">
         <div className="product-header">
           <h3 className="product-name">
-            <Link to={`/products/${product.id}`}>
+            <button 
+              className="product-name-link"
+              onClick={() => onViewDetails(product)}
+            >
               {product.name}
-            </Link>
+            </button>
           </h3>
           <span className="product-price">{formatPrice(product.price)}</span>
         </div>
@@ -196,13 +221,13 @@ const UserProductCard = ({ product, canManage }) => {
         </div>
 
         <div className="product-footer">
-          <Link 
-            to={`/products/${product.id}`}
+          <button 
             className="btn btn-outline btn-sm"
+            onClick={() => onViewDetails(product)}
           >
             <i className="fas fa-eye"></i>
             View Details
-          </Link>
+          </button>
           {canManage && (
             <Link 
               to={`/products/${product.id}/edit`}

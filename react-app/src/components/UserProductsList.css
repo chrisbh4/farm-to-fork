@@ -262,13 +262,22 @@
   line-height: 1.4;
 }
 
-.product-name a {
+.product-name a,
+.product-name-link {
   color: var(--gray-900);
   text-decoration: none;
   transition: color var(--transition-fast);
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
 }
 
-.product-name a:hover {
+.product-name a:hover,
+.product-name-link:hover {
   color: var(--primary-600);
   text-decoration: none;
 }
