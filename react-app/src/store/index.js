@@ -11,7 +11,6 @@ const CLEAR_ORDERS = 'orders/CLEAR_ORDERS';
 
 const loadOrders = (orders) => ({ type: LOAD_ORDERS, orders });
 const addOrder = (order) => ({ type: ADD_ORDER, order });
-const clearOrders = () => ({ type: CLEAR_ORDERS });
 
 export const fetchUserOrders = () => async (dispatch) => {
     try {

@@ -179,9 +179,9 @@
   padding: var(--space-2) var(--space-4);
   font-size: var(--text-sm);
   font-weight: 600;
-  color: var(--primary-600);
-  background-color: var(--primary-50);
-  border: 2px solid var(--primary-200);
+  color: var(--gray-600);
+  background-color: transparent;
+  border: 2px solid var(--gray-200);
   border-radius: var(--radius-lg);
   text-decoration: none;
   transition: all var(--transition-fast);
@@ -348,9 +348,9 @@
 }
 
 .navbar-user-menu:hover {
-  color: var(--gray-900);
-  background-color: white;
-  border-color: var(--gray-300);
+  color: var(--primary-700);
+  background-color: var(--primary-100);
+  border-color: var(--primary-300);
   box-shadow: var(--shadow-sm);
 }
 
@@ -378,6 +378,7 @@
 }
 
 .navbar-user-dropdown {
+  
   position: absolute;
   top: calc(100% + var(--space-2));
   right: 0;
@@ -389,6 +390,7 @@
   z-index: 2001;
   overflow: visible;
   pointer-events: auto;
+  
 }
 
 .navbar-user-dropdown-header {
