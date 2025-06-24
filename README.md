@@ -245,6 +245,9 @@ farm-to-fork/
 SECRET_KEY=your-secret-key
 DATABASE_URL=your-database-url
 REACT_APP_BASE_URL=your-backend-url
+S3_KEY=aws-s3-key 
+S3_SECRET=aws-s3-secret-key 
+S3_BUCKET=aws-s3-bucket-name
 ```
 
 ## 🤝 Contributing
