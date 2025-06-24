@@ -1,9 +1,9 @@
-# fly.toml app configuration file generated for spud-hub on 2025-05-24T00:07:34-07:00
+# fly.toml app configuration file generated for farm-to-fork on 2025-06-22T01:36:15-07:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'spud-hub'
+app = 'farm-to-fork'
 primary_region = 'sjc'
 
 [build]
