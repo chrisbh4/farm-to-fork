@@ -253,6 +253,6 @@ S3_BUCKET=aws-s3-bucket-name
 
 ## 📞 Contact
 
-*Christian Brown*: [chrismbh4@gmail.com](mailto:chrismbh4@gmail.com)
+*Email*: [chrismbh4@gmail.com](mailto:chrismbh4@gmail.com)
 
 *Project Link*: [Github Repo](https://github.com/chrisbh4/farm-to-fork)
