@@ -4,8 +4,8 @@
 
 Farm to Fork is a full-stack web application that bridges the gap between local farmers and consumers, providing a seamless marketplace for fresh, locally-sourced produce. Built with React and Flask, it offers a complete e-commerce experience with real-time cart management, order tracking, and user-friendly interfaces.
 
-[![Live Demo](https://img.shields.io/badge/Live-Demo-green)](https://your-app-url.com)
-[![GitHub](https://img.shields.io/badge/GitHub-Repository-blue)](https://github.com/your-username/farm-to-fork)
+[![Live Demo](https://img.shields.io/badge/Live-Demo-green)](https://farm-to-fork.fly.dev/)
+[![GitHub](https://img.shields.io/badge/GitHub-Repository-blue)](https://github.com/chrisbh4/farm-to-fork)
 
 ## 🌟 Features
 
@@ -250,30 +250,9 @@ S3_SECRET=aws-s3-secret-key
 S3_BUCKET=aws-s3-bucket-name
 ```
 
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- **App Academy** - For the foundational project structure
-- **Local Farmers** - For inspiring the concept of direct farm-to-consumer commerce
-- **Open Source Community** - For the amazing tools and libraries used
 
 ## 📞 Contact
 
-**Your Name** - [your.email@example.com](mailto:your.email@example.com)
+*Christian Brown*: [chrismbh4@gmail.com](mailto:chrismbh4@gmail.com)
 
-Project Link: [https://github.com/your-username/farm-to-fork](https://github.com/your-username/farm-to-fork)
-
----
-
-**Made with ❤️ for farmers and fresh food lovers**
+*Project Link*: [Github Repo](https://github.com/chrisbh4/farm-to-fork)
